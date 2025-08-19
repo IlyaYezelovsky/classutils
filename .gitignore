@@ -1,11 +1,41 @@
-# Compiled class file
-*.class
+# Eclipse 项目文件
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
 
-# Log file
+# Eclipse 核心文件
+.project
+.classpath
+
+# 编译输出
+*.class
+*.war
+*.ear
+
+# 日志文件
 *.log
 
-# BlueJ files
-*.ctxt
+# 依赖目录 (如 Maven/Gradle)
+target/
+build/
+out/
+dist/
+
+# IDE 临时文件
+.idea/
+*.iml
+
+# 系统文件
+.DS_Store
+Thumbs.db
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -22,3 +52,6 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# BlueJ files
+*.ctxt
