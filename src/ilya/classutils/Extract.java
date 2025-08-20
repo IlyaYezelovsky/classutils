@@ -66,7 +66,7 @@ public class Extract {
 				throw new IllegalArgumentException("必须输入[1, 19]的整数，但却发现了「" + num + "」");
 			}
 			while (list.size() < num) {
-				String i = getRandomStudent();
+				String i = getRandomBoy();
 				if (!list.contains(i)) {
 					list.add(i);
 				}
@@ -91,7 +91,7 @@ public class Extract {
 				throw new IllegalArgumentException("必须输入[1, 10]的整数，但却发现了「" + num + "」");
 			}
 			while (list.size() < num) {
-				String i = getRandomStudent();
+				String i = getRandomGirl();
 				if (!list.contains(i)) {
 					list.add(i);
 				}
