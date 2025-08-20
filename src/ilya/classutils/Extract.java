@@ -17,30 +17,36 @@ public class Extract {
 	private JTextArea outputArea;
 	private StringBuffer output;
 	private int sex = 0;
-	private final static Random rd = new Random();
+	private Random rd;
 	
 	public String getRandomStudent() {
+		refresh();
 		return Utils.LIST_ALL[rd.nextInt(29)];
 	}
 	
 	public String getRandomBoy() {
+		refresh();
 		return Utils.LIST_BOY[rd.nextInt(19)];
 	}
 	
 	public String getRandomGirl() {
+		refresh();
 		return Utils.LIST_GIRL[rd.nextInt(10)];
 	}
 	
 	public String[] getRandomStudent(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			HashSet<String> set = new HashSet<String>();
+			ArrayList<String> list = new ArrayList<String>();
 			if (num < 1 || num > 29) {
 				throw new IllegalArgumentException("必须输入[1, 29]的整数，但却发现了「" + num + "」");
 			}
-			while (set.size() < num) {
-				set.add(getRandomStudent());
+			while (list.size() < num) {
+				String i = getRandomStudent();
+				if (!list.contains(i)) {
+					list.add(i);
+				}
 			}
-			return set.toArray(new String[num]);
+			return list.toArray(new String[num]);
 		} else {
 			if (num < 1) {
 				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
@@ -55,14 +61,17 @@ public class Extract {
 	
 	public String[] getRandomBoy(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			HashSet<String> set = new HashSet<String>();
+			ArrayList<String> list = new ArrayList<String>();
 			if (num < 1 || num > 19) {
 				throw new IllegalArgumentException("必须输入[1, 19]的整数，但却发现了「" + num + "」");
 			}
-			while (set.size() < num) {
-				set.add(getRandomBoy());
+			while (list.size() < num) {
+				String i = getRandomStudent();
+				if (!list.contains(i)) {
+					list.add(i);
+				}
 			}
-			return set.toArray(new String[num]);
+			return list.toArray(new String[num]);
 		} else {
 			if (num < 1) {
 				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
@@ -77,14 +86,17 @@ public class Extract {
 	
 	public String[] getRandomGirl(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			HashSet<String> set = new HashSet<String>();
+			ArrayList<String> list = new ArrayList<String>();
 			if (num < 1 || num > 10) {
 				throw new IllegalArgumentException("必须输入[1, 10]的整数，但却发现了「" + num + "」");
 			}
-			while (set.size() < num) {
-				set.add(getRandomGirl());
+			while (list.size() < num) {
+				String i = getRandomStudent();
+				if (!list.contains(i)) {
+					list.add(i);
+				}
 			}
-			return set.toArray(new String[num]);
+			return list.toArray(new String[num]);
 		} else {
 			if (num < 1) {
 				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
@@ -181,9 +193,11 @@ public class Extract {
 		quickPanel.add(button5);
 
 		JPanel inputPanel = new JPanel();
-		inputField = new JTextField(25);
+		inputField = new JTextField(5);
 		JButton okButton = new JButton("抽取");
 		JButton clearButton = new JButton("清屏");
+		JButton copyButton = new JButton("复制");
+		
 		clearButton.addActionListener(a -> {
 			output.delete(0, output.length());
 			outputArea.setText("");
@@ -194,11 +208,16 @@ public class Extract {
 			outputArea.setText("");
 			frame.dispose();
 		});
+		copyButton.addActionListener(a -> {
+			Utils.copy(output.toString());
+		});
 		okButton.addActionListener(new InputListener());
+		
 		inputPanel.setLayout(new FlowLayout());
 		inputPanel.add(inputField);
 		inputPanel.add(okButton);
 		inputPanel.add(clearButton);
+		inputPanel.add(copyButton);
 		inputPanel.add(exitButton);
 		JPanel middlePanel = new JPanel();
 		middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
@@ -220,7 +239,7 @@ public class Extract {
 		panel.add(rightPanel);
 		
 		frame.getContentPane().add(panel);
-		frame.setSize(1000, 250);
+		frame.setSize(850, 250);
 		frame.setVisible(true);
 	}
 	
@@ -245,7 +264,7 @@ public class Extract {
 	private void showResult(int type, int num, boolean allowRepeat) {
 		String[] result = getRandom(type, num, allowRepeat);
 		StringBuffer sb = new StringBuffer();
-		sb.append(Utils.getTime() +  " ");
+		sb.append(Utils.getTime() + " ");
 		sb.append(getMode() + " " + getRepeat() + num + "个\n");
 		for (int i = 0; i < result.length; i++) {
 			sb.append("[" + (i + 1) + "] " + result[i] + "\n");
@@ -292,6 +311,10 @@ public class Extract {
 		} else {
 			return "不允许重复";
 		}
+	}
+	
+	private void refresh() {
+		rd = new Random((long) (Long.MAX_VALUE * Math.random()));
 	}
 
 }

@@ -11,7 +11,7 @@ public class Main {
 	private JPanel panel;
 	
 	public void go() {
-		frame = new JFrame("Class 15 Utilities v0.2.0");
+		frame = new JFrame("Class 15 Utilities v1.0.0");
 		panel = new JPanel();
 		
 		JButton extractButton = new JButton("随机抽取");
@@ -19,7 +19,13 @@ public class Main {
 			new Extract().go();
 		});
 		
+		JButton seatButton = new JButton("一键排座位");
+		seatButton.addActionListener(a -> {
+			new Seat().go();
+		});
+		
 		panel.add(extractButton);
+		panel.add(seatButton);
 		
 		JButton aboutButton = new JButton("关于");
 		aboutButton.addActionListener(a -> {
@@ -35,7 +41,7 @@ public class Main {
 			JPanel panel3 = new JPanel();
 			JPanel panel4 = new JPanel();
 			panel1.add(new JLabel("Class 15 Utils"));
-			panel2.add(new JLabel("v0.2.0 on 2025.8.20"));
+			panel2.add(new JLabel("v1.0.0 on 2025.8.20"));
 			panel3.add(new JLabel("by IlyaYezelovsky"));
 			panel4.add(ok);
 			mPanel.add(panel1);
@@ -55,7 +61,7 @@ public class Main {
 		panel.add(exitButton);
 		
 		frame.getContentPane().add(panel);
-		frame.setSize(150, 150);
+		frame.setSize(150, 180);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}

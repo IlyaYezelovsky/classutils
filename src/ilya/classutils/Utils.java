@@ -1,5 +1,7 @@
 package ilya.classutils;
 
+import java.awt.*;
+import java.awt.datatransfer.*;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
@@ -34,5 +36,12 @@ public class Utils {
                 time.getMinute(),
                 time.getSecond());
     }
+	
+	public static void copy(String text) {
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection(text);
+        clipboard.setContents(selection, null);
+    }
+
 
 }
