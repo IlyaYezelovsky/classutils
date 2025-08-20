@@ -14,19 +14,21 @@ public class Extract {
 	private JRadioButton girlRadio;
 	private JCheckBox repeatBox;
 	private JTextField inputField;
+	private JTextArea outputArea;
+	private StringBuffer output;
 	private int sex = 0;
 	private final static Random rd = new Random();
 	
 	public String getRandomStudent() {
-		return List.ALL[rd.nextInt(29)];
+		return Utils.LIST_ALL[rd.nextInt(29)];
 	}
 	
 	public String getRandomBoy() {
-		return List.BOY[rd.nextInt(19)];
+		return Utils.LIST_BOY[rd.nextInt(19)];
 	}
 	
 	public String getRandomGirl() {
-		return List.GIRL[rd.nextInt(10)];
+		return Utils.LIST_GIRL[rd.nextInt(10)];
 	}
 	
 	public String[] getRandomStudent(int num, boolean allowRepeat) {
@@ -137,9 +139,9 @@ public class Extract {
 		JPanel selectPanel = new JPanel();
 		selectPanel.setLayout(new BoxLayout(selectPanel, BoxLayout.Y_AXIS));
 		ButtonGroup group = new ButtonGroup();
-		allRadio = new JRadioButton("全部学生");
-		boyRadio = new JRadioButton("仅男生");
-		girlRadio = new JRadioButton("仅女生");
+		allRadio = new JRadioButton("不限性别");
+		boyRadio = new JRadioButton("仅限男生");
+		girlRadio = new JRadioButton("仅限女生");
 		group.add(allRadio);
 		group.add(boyRadio);
 		group.add(girlRadio);
@@ -158,19 +160,19 @@ public class Extract {
 		JButton button4 = new JButton("4");
 		JButton button5 = new JButton("5");
 		button1.addActionListener(a -> {
-			showResult(getSex(), 1, repeat());
+			showResult(getSex(), 1, repeatAllowed());
 		});
 		button2.addActionListener(a -> {
-			showResult(getSex(), 2, repeat());
+			showResult(getSex(), 2, repeatAllowed());
 		});
 		button3.addActionListener(a -> {
-			showResult(getSex(), 3, repeat());
+			showResult(getSex(), 3, repeatAllowed());
 		});
 		button4.addActionListener(a -> {
-			showResult(getSex(), 4, repeat());
+			showResult(getSex(), 4, repeatAllowed());
 		});
 		button5.addActionListener(a -> {
-			showResult(getSex(), 5, repeat());
+			showResult(getSex(), 5, repeatAllowed());
 		});
 		quickPanel.add(button1);
 		quickPanel.add(button2);
@@ -180,19 +182,45 @@ public class Extract {
 
 		JPanel inputPanel = new JPanel();
 		inputField = new JTextField(25);
-		JButton okButton = new JButton("确定");
+		JButton okButton = new JButton("抽取");
+		JButton clearButton = new JButton("清屏");
+		clearButton.addActionListener(a -> {
+			output.delete(0, output.length());
+			outputArea.setText("");
+		});
+		JButton exitButton = new JButton("关闭");
+		exitButton.addActionListener(a -> {
+			output.delete(0, output.length());
+			outputArea.setText("");
+			frame.dispose();
+		});
 		okButton.addActionListener(new InputListener());
 		inputPanel.setLayout(new FlowLayout());
 		inputPanel.add(inputField);
 		inputPanel.add(okButton);
+		inputPanel.add(clearButton);
+		inputPanel.add(exitButton);
+		JPanel middlePanel = new JPanel();
+		middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
+		middlePanel.add(quickPanel);
+		middlePanel.add(inputPanel);
+		panel.add(middlePanel);
+		
+		output = new StringBuffer();
+		
+		outputArea = new JTextArea(12, 40);
+		outputArea.setEditable(false);
+		outputArea.setLineWrap(true);
+		JScrollPane scroller = new JScrollPane(outputArea);
+		scroller.setAutoscrolls(true);
+		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		JPanel rightPanel = new JPanel();
-		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		rightPanel.add(quickPanel);
-		rightPanel.add(inputPanel);
+		rightPanel.add(scroller);
 		panel.add(rightPanel);
 		
 		frame.getContentPane().add(panel);
-		frame.setSize(500, 150);
+		frame.setSize(1000, 250);
 		frame.setVisible(true);
 	}
 	
@@ -210,29 +238,59 @@ public class Extract {
 	public final static int BOY_ONLY = 1;
 	public final static int GIRL_ONLY = 2;
 	
-	private boolean repeat() {
+	private boolean repeatAllowed() {
 		return repeatBox.isSelected();
 	}
 	
 	private void showResult(int type, int num, boolean allowRepeat) {
 		String[] result = getRandom(type, num, allowRepeat);
 		StringBuffer sb = new StringBuffer();
+		sb.append(Utils.getTime() +  " ");
+		sb.append(getMode() + " " + getRepeat() + num + "个\n");
 		for (int i = 0; i < result.length; i++) {
 			sb.append("[" + (i + 1) + "] " + result[i] + "\n");
 		}
-		Msgbox.info(sb.toString(), "随机抽取结果");
+		sb.append("----" + "\n");
+		output.append(sb.toString());
+		outputArea.setText(output.toString());
 	}
 	
 	private class InputListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				showResult(getSex(), Integer.parseInt(inputField.getText()), repeat());
-			} catch (NumberFormatException ex) {
-				Msgbox.error("不正确的输入");
-			} catch (IllegalArgumentException ex) {
-				Msgbox.error(ex);
+				showResult(getSex(), Integer.parseInt(inputField.getText()), repeatAllowed());
+			} catch (Exception e1) {
+				JFrame msgbox = new JFrame("Error");
+				JPanel mPanel = new JPanel();
+				JButton ok = new JButton("OK");
+				ok.addActionListener(a -> {
+					msgbox.dispose();
+				});
+				mPanel.add(new JLabel("不正确的输入"));
+				mPanel.add(ok);
+				msgbox.getContentPane().add(mPanel);
+				msgbox.setSize(100, 100);
+				msgbox.setVisible(true);
 			}
+		}
+	}
+	
+	private String getMode() {
+		if (boyRadio.isSelected()) {
+			return "仅限男生";
+		} else if (girlRadio.isSelected()) {
+			return "仅限女生";
+		} else {
+			return "不限性别";
+		}
+	}
+	
+	private String getRepeat() {
+		if (repeatAllowed()) {
+			return "允许重复";
+		} else {
+			return "不允许重复";
 		}
 	}
 
