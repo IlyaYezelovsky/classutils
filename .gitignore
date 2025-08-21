@@ -31,6 +31,7 @@ dist/
 
 # IDE 临时文件
 .idea/
+.settings/
 *.iml
 
 # 系统文件
