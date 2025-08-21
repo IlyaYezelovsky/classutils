@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.lokova</groupId>
+  <artifactId>ilya.classutils</artifactId>
+  <version>v1.0.1</version>
+  <name>Utilities for Class 15</name>
+  <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>24</maven.compiler.source> <!-- 根据您的JDK版本修改 -->
+        <maven.compiler.target>24</maven.compiler.target> <!-- 根据您的JDK版本修改 -->
+  </properties>
+  <dependencies>
+        <!-- Apache POI 核心库 -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.4</version> <!-- 建议使用最新稳定版 -->
+        </dependency>
+
+        <!-- Apache POI 用于处理 .xlsx 文件 (Office Open XML格式) -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.4</version> <!-- 版本号应与核心库保持一致 -->
+        </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <release>23</release>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
