@@ -5,6 +5,7 @@ import java.awt.datatransfer.*;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
+import javax.swing.*;
 
 public class Utils {
 
@@ -42,6 +43,35 @@ public class Utils {
         StringSelection selection = new StringSelection(text);
         clipboard.setContents(selection, null);
     }
-
-
+	
+	public static void errorMsgbox(Exception e) {
+		JFrame frame = new JFrame();
+		JPanel panel = new JPanel();
+		
+		JTextArea text = new JTextArea(20, 20);
+		text.setEditable(false);
+		text.setText(e.getMessage() + "\n" + e.getStackTrace());
+		JScrollPane scroller = new JScrollPane(text);
+		scroller.setAutoscrolls(true);
+		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
+		JButton copyButton = new JButton("复制错误信息");
+		copyButton.addActionListener(a -> {
+			copy(text.getText());
+		});
+		JButton ok = new JButton("OK");
+		ok.addActionListener(a -> {
+			frame.dispose();
+		});
+		
+		panel.add(scroller);
+		panel.add(copyButton);
+		panel.add(ok);
+		
+		frame.getContentPane().add(panel);
+		frame.setSize(500, 500);
+		frame.setVisible(true);
+	}
+	
 }

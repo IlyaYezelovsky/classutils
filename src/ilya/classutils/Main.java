@@ -67,7 +67,11 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		new Main().go();
+		try {
+			new Main().go();
+		} catch (Exception e) {
+			Utils.errorMsgbox(e);
+		}
 	}
 
 }
