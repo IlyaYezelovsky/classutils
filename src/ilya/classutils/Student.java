@@ -13,7 +13,7 @@ public class Student implements Serializable, Comparable<Student> {
 	
 	public static TreeSet<Student> LIST;
 	
-	public static void initialList() {
+	public static void initializeList() {
 /*
  * "01♀宋奕妍", "02♂黄文林", "03♂李楚誉", "04♂苏浦", "05♂梁键", "06♂刘浩然", 
  * "07♂王张向阳", "08♀周淑艺", "09♂陶云良", "10♂陈陆", "11♂吴金桐", "12♂周谢予", 
