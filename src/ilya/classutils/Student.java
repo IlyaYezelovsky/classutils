@@ -11,7 +11,7 @@ public class Student implements Serializable, Comparable<Student> {
 	private int num;
 	private int score;
 	
-	public static ArrayList<Student> list;
+	public static TreeSet<Student> LIST;
 	
 	public static void initialList() {
 /*
@@ -52,7 +52,13 @@ public class Student implements Serializable, Comparable<Student> {
 				new Student(28, "陈昱彤", false),
 				new Student(29, "潘思宇", false)
 				);
-		list = new ArrayList<Student>(temp);
+		LIST = new TreeSet<Student>(temp);
+	}
+	
+	@Override
+	public int compareTo(Student s) {
+		Integer n = num;
+		return n.compareTo(s.num);
 	}
 	
 	public Student(int no, String n, boolean s) {
