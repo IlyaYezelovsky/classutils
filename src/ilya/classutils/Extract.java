@@ -280,17 +280,7 @@ public class Extract {
 			try {
 				showResult(getSex(), Integer.parseInt(inputField.getText()), repeatAllowed());
 			} catch (Exception e1) {
-				JFrame msgbox = new JFrame("Error");
-				JPanel mPanel = new JPanel();
-				JButton ok = new JButton("OK");
-				ok.addActionListener(a -> {
-					msgbox.dispose();
-				});
-				mPanel.add(new JLabel("不正确的输入"));
-				mPanel.add(ok);
-				msgbox.getContentPane().add(mPanel);
-				msgbox.setSize(100, 100);
-				msgbox.setVisible(true);
+				Utils.showMsgbox("不正确的输入", "错误", 80, 100);
 			}
 		}
 	}

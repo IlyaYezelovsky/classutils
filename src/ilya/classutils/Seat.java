@@ -45,7 +45,11 @@ public class Seat {
 		});
 		JButton exportButton = new JButton("导出");
 		exportButton.addActionListener(a -> {
-			export();
+			try {
+				export();
+			} catch (Exception e) {
+				Utils.showMsgbox("必须先抽取才能导出！", "错误");
+			}
 		});
 		
 		JPanel panel1 = new JPanel();
@@ -99,9 +103,9 @@ public class Seat {
 		return sb.toString();
 	}
 	
-	public void export() {
+	public boolean export() {
 		SeatExcel exporter = new SeatExcel();
-		exporter.showSaveGUI(exporter.makeExcel());
+		return exporter.showSaveGUI(exporter.makeExcel());
 	}
 	
 	public class SeatExcel {
@@ -137,6 +141,9 @@ public class Seat {
 		private Workbook makeExcel() {
 			Workbook excel = new XSSFWorkbook();
 			Sheet sheet = excel.createSheet("学生座位表");
+			if (latest == null) {
+				throw new IllegalStateException("你还没有抽取！");
+			}
 			String[] list = latest;
 			int i = 0;
 			for (int j = 5; j > 1; j--, i++) {
@@ -150,11 +157,14 @@ public class Seat {
 			return excel;
 		}
 		
-		private void showSaveGUI(Workbook excel) {
+		private boolean showSaveGUI(Workbook excel) {
 			JFileChooser chooser = new JFileChooser();
 			chooser.showSaveDialog(frame);
 			if (chooser.getSelectedFile() != null) {
 				save(excel, chooser.getSelectedFile());
+				return true;
+			} else {
+				return false;
 			}
 		}
 		
@@ -162,13 +172,14 @@ public class Seat {
 			try {
 				FileOutputStream outputStream = new FileOutputStream(file);
 				excel.write(outputStream);
+				Utils.showMsgbox("导出成功", "信息");
 			} catch (Exception e) {
-				Utils.errorMsgbox(e);
+				Utils.showErrorMsgbox(e);
 			} finally {
 				try {
 					excel.close();
 				} catch (IOException e) {
-					Utils.errorMsgbox(e);
+					Utils.showErrorMsgbox(e);
 				}
 			}
 		}

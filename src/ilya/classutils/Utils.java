@@ -2,6 +2,8 @@ package ilya.classutils;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
@@ -44,17 +46,24 @@ public class Utils {
         clipboard.setContents(selection, null);
     }
 	
-	public static void errorMsgbox(Exception e) {
-		JFrame frame = new JFrame();
+	public static void showErrorMsgbox(Exception e) {
+		JFrame frame = new JFrame("错误");
 		JPanel panel = new JPanel();
 		
-		JTextArea text = new JTextArea(20, 20);
+		StringWriter sw = new StringWriter();
+		PrintWriter writer = new PrintWriter(sw);
+		e.printStackTrace(writer);
+		
+		JTextArea text = new JTextArea(22, 40);
 		text.setEditable(false);
-		text.setText(e.getMessage() + "\n" + e.getStackTrace());
+		text.setText(sw.toString());
 		JScrollPane scroller = new JScrollPane(text);
 		scroller.setAutoscrolls(true);
 		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
+		JPanel up = new JPanel();
+		up.add(scroller);
 		
 		JButton copyButton = new JButton("复制错误信息");
 		copyButton.addActionListener(a -> {
@@ -65,13 +74,34 @@ public class Utils {
 			frame.dispose();
 		});
 		
-		panel.add(scroller);
-		panel.add(copyButton);
-		panel.add(ok);
+		JPanel down = new JPanel();
+		down.add(copyButton);
+		down.add(ok);
+		
+		panel.add(up);
+		panel.add(down);
 		
 		frame.getContentPane().add(panel);
 		frame.setSize(500, 500);
 		frame.setVisible(true);
+	}
+	
+	public static void showMsgbox(String msg, String title, int width, int height) {
+		JFrame msgbox = new JFrame(title);
+		JPanel mPanel = new JPanel();
+		JButton ok = new JButton("OK");
+		ok.addActionListener(a1 -> {
+			msgbox.dispose();
+		});
+		mPanel.add(new JLabel(msg));
+		mPanel.add(ok);
+		msgbox.getContentPane().add(mPanel);
+		msgbox.setSize(width, height);
+		msgbox.setVisible(true);
+	}
+	
+	public static void showMsgbox(String msg, String title) {
+		showMsgbox(msg, title, 100, 100);
 	}
 	
 }
