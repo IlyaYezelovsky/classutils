@@ -105,6 +105,7 @@ public class Student implements Serializable, Comparable<Student> {
 		for (ScoreChange s:scoreChangeList) {
 			sb.append(s.toString() + "\n");
 		}
+		return sb.toString();
 	}
 	
 	@Override
