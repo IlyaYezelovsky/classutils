@@ -108,9 +108,39 @@ public class Student implements Serializable, Comparable<Student> {
 		return sb.toString();
 	}
 	
+	public char getSexSymbol() {
+		return sex ? '♂' : '♀';
+	}
+	
 	@Override
 	public String toString() {
-		return name;
+		return num + getSexSymbol() + name;
+	}
+	
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof Student && o.toString().equals(this.toString()));
+	}
+	
+	public static FileOutputStream saveAll(File file) throws IOException {
+		FileOutputStream fs = new FileOutputStream(file);
+		ObjectOutputStream os = new ObjectOutputStream(fs);
+		os.writeObject(LIST);
+		os.close();
+		return fs;
+	}
+	
+	public static ArrayList<Student> loadAll(File file) throws IOException, ClassNotFoundException {
+		FileInputStream fs = new FileInputStream(file);
+		ObjectInputStream os = new ObjectInputStream(fs);
+		ArrayList<Student> result = (ArrayList<Student>) os.readObject();
+		os.close();
+		return result;
 	}
 
 }
