@@ -14,6 +14,11 @@ public class Main {
 		frame = new JFrame("Class 15 Utilities v2.0.1");
 		panel = new JPanel();
 		
+		JButton studentButton = new JButton("学生列表");
+		studentButton.addActionListener(a -> {
+			new StudentGUI(Student.LIST.toArray(new Student[29])).go();
+		});
+		
 		JButton extractButton = new JButton("随机抽取");
 		extractButton.addActionListener(a -> {
 			new Extract().go();
@@ -24,6 +29,7 @@ public class Main {
 			new Seat().go();
 		});
 		
+		panel.add(studentButton);
 		panel.add(extractButton);
 		panel.add(seatButton);
 		
@@ -61,7 +67,7 @@ public class Main {
 		panel.add(exitButton);
 		
 		frame.getContentPane().add(panel);
-		frame.setSize(150, 180);
+		frame.setSize(150, 220);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
