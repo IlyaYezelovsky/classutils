@@ -113,7 +113,7 @@ public class Utils {
 		} else if (x > 0) {
 			return "+" + x;
 		} else {
-			return "-" + x;
+			return Integer.toString(x);
 		}
 	}
 	

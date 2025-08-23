@@ -114,7 +114,7 @@ public class Student implements Serializable, Comparable<Student> {
 	
 	@Override
 	public String toString() {
-		return num + getSexSymbol() + name;
+		return num + Character.toString(getSexSymbol()) + name;
 	}
 	
 	@Override
@@ -127,20 +127,34 @@ public class Student implements Serializable, Comparable<Student> {
 		return (o instanceof Student && o.toString().equals(this.toString()));
 	}
 	
-	public static FileOutputStream saveAll(File file) throws IOException {
+	public static void saveAll(File file) throws IOException {
 		FileOutputStream fs = new FileOutputStream(file);
 		ObjectOutputStream os = new ObjectOutputStream(fs);
 		os.writeObject(LIST);
 		os.close();
-		return fs;
 	}
 	
-	public static ArrayList<Student> loadAll(File file) throws IOException, ClassNotFoundException {
+	public static void saveAll() throws IOException {
+		try {
+			saveAll(new File("score.ini"));
+		} catch (IOException e) {
+			Utils.showErrorMsgbox(e);
+		}
+	}
+	
+	public static void loadAll(File file) throws IOException, ClassNotFoundException {
 		FileInputStream fs = new FileInputStream(file);
 		ObjectInputStream os = new ObjectInputStream(fs);
-		ArrayList<Student> result = (ArrayList<Student>) os.readObject();
+		LIST = (TreeSet<Student>) os.readObject();
 		os.close();
-		return result;
+	}
+	
+	public static void loadAll() throws IOException {
+		try {
+			loadAll(new File("score.ini"));
+		} catch (Exception e) {
+			Utils.showErrorMsgbox(e);
+		}
 	}
 
 }

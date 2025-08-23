@@ -2,6 +2,7 @@ package ilya.classutils;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 
@@ -77,6 +78,18 @@ public class Main {
 			ArrayList<String> argList = new ArrayList<String>(Arrays.asList(args));
 			if (argList.contains("--initialize")) {
 				Student.initializeList();
+			} else {
+				try {
+					Student.loadAll();
+				} catch (IOException e) {
+					Utils.showErrorMsgbox(e);
+				}
+			}
+		} else {
+			try {
+				Student.loadAll();
+			} catch (IOException e) {
+				Utils.showErrorMsgbox(e);
 			}
 		}
 		launch();
