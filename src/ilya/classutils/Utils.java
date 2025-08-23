@@ -25,8 +25,7 @@ public class Utils {
             "01♀宋奕妍", "08♀周淑艺", "15♀麦珊", "16♀陈杨慧", "17♀林世凤", "18♀郑好", "22♀钟丹彤", "27♀周花吉", "28♀陈昱彤", "29♀潘思宇"
     };
 	
-	public static String getTime() {
-		ZonedDateTime time = ZonedDateTime.now(ZoneId.of("Asia/Irkutsk"));
+	public static String getTime(ZonedDateTime time) {
 		String dayOfWeek = time.getDayOfWeek()
 				.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
                 .toUpperCase();
@@ -39,6 +38,10 @@ public class Utils {
                 time.getMinute(),
                 time.getSecond());
     }
+	
+	public static String getTime() {
+		return getTime(ZonedDateTime.now(ZoneId.of("Asia/Irkutsk")));
+	}
 	
 	public static void copy(String text) {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -102,6 +105,16 @@ public class Utils {
 	
 	public static void showMsgbox(String msg, String title) {
 		showMsgbox(msg, title, 100, 100);
+	}
+	
+	public static String pm(int x) {
+		if (x == 0) {
+			return "0";
+		} else if (x > 0) {
+			return "+" + x;
+		} else {
+			return "-" + x;
+		}
 	}
 	
 }

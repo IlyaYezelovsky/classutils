@@ -1,6 +1,7 @@
 package ilya.classutils;
 
 import java.io.*;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 public class Student implements Serializable, Comparable<Student> {
@@ -10,6 +11,7 @@ public class Student implements Serializable, Comparable<Student> {
 	private boolean sex;//true for male, false for female
 	private int num;
 	private int score;
+	private ArrayList<ScoreChange> scoreChangeList;
 	
 	public static TreeSet<Student> LIST;
 	
@@ -66,6 +68,7 @@ public class Student implements Serializable, Comparable<Student> {
 		sex = s;
 		num = no;
 		score = 0;
+		scoreChangeList = new ArrayList<ScoreChange>();
 	}
 	
 	public String getName() {
@@ -84,8 +87,29 @@ public class Student implements Serializable, Comparable<Student> {
 		return score;
 	}
 	
-	public void addScore(int s) {
+	//You should not use this when in general use
+	void modifyScore(int s) {
 		score += s;
+	}
+	
+	public void changeScore(ZonedDateTime t, String r, int p) {
+		scoreChangeList.add(new ScoreChange(this, t, r, p));
+	}
+	
+	public void changeScore(String r, int p) {
+		scoreChangeList.add(new ScoreChange(this, r, p));
+	}
+	
+	public String getAllRecord() {
+		StringBuffer sb = new StringBuffer();
+		for (ScoreChange s:scoreChangeList) {
+			sb.append(s.toString() + "\n");
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 
 }
