@@ -87,9 +87,5 @@ public class Student implements Serializable, Comparable<Student> {
 	public void addScore(int s) {
 		score += s;
 	}
-	
-	public void removeScore(int s) {
-		score -= s;
-	}
 
 }

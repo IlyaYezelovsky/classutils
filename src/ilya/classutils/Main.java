@@ -67,6 +67,16 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+		if (args.length != 0) {
+			ArrayList<String> argList = new ArrayList<String>(Arrays.asList(args));
+			if (argList.contains("--initialize")) {
+				Student.initializeList();
+			}
+		}
+		launch();
+	}
+	
+	private static void launch() {
 		try {
 //			throw new RuntimeException("Test exception");
 			new Main().go();
