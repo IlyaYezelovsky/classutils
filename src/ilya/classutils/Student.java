@@ -10,8 +10,15 @@ public class Student implements Serializable, Comparable<Student> {
 	private String name;
 	private boolean sex;//true for male, false for female
 	private int num;
-	private int score;
 	private ArrayList<ScoreChange> scoreChangeList;
+	
+	public int getScore() {
+		int x = 0;
+		for (ScoreChange s:scoreChangeList) {
+			x += s.getPoint();
+		}
+		return x;
+	}
 	
 	public static TreeSet<Student> LIST;
 	
@@ -67,7 +74,6 @@ public class Student implements Serializable, Comparable<Student> {
 		name = n;
 		sex = s;
 		num = no;
-		score = 0;
 		scoreChangeList = new ArrayList<ScoreChange>();
 	}
 	
@@ -83,15 +89,6 @@ public class Student implements Serializable, Comparable<Student> {
 		return num;
 	}
 	
-	public int getScore() {
-		return score;
-	}
-	
-	//You should not use this when in general use
-	void modifyScore(int s) {
-		score += s;
-	}
-	
 	public void changeScore(ZonedDateTime t, String r, int p) {
 		scoreChangeList.add(new ScoreChange(this, t, r, p));
 	}
@@ -100,12 +97,8 @@ public class Student implements Serializable, Comparable<Student> {
 		scoreChangeList.add(new ScoreChange(this, r, p));
 	}
 	
-	public String getAllRecord() {
-		StringBuffer sb = new StringBuffer();
-		for (ScoreChange s:scoreChangeList) {
-			sb.append(s.toString() + "\n");
-		}
-		return sb.toString();
+	public ScoreChange[] getAllRecord() {
+		return scoreChangeList.toArray(new ScoreChange[scoreChangeList.size()]);
 	}
 	
 	public char getSexSymbol() {
@@ -136,7 +129,7 @@ public class Student implements Serializable, Comparable<Student> {
 	
 	public static void saveAll() throws IOException {
 		try {
-			saveAll(new File("score.ini"));
+			saveAll(new File("score.ser"));
 		} catch (IOException e) {
 			Utils.showErrorMsgbox(e);
 		}
@@ -151,10 +144,14 @@ public class Student implements Serializable, Comparable<Student> {
 	
 	public static void loadAll() throws IOException {
 		try {
-			loadAll(new File("score.ini"));
+			loadAll(new File("score.ser"));
 		} catch (Exception e) {
 			Utils.showErrorMsgbox(e);
 		}
+	}
+	
+	public boolean removeRecord(ScoreChange record) {
+		return scoreChangeList.remove(record);
 	}
 
 }

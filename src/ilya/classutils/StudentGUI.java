@@ -8,13 +8,14 @@ public class StudentGUI {
 	private JFrame frame;
 	private JPanel panel;
 	private JList<Student> list;
-	private JTextArea scoreArea;
+	private JList<ScoreChange> scoreList;
 	
 	public StudentGUI(Student[] array) {
 		list = new JList<Student>(array);
 	}
 	
 	public void go() {
+		
 		frame = new JFrame("学生列表");
 		panel = new JPanel();
 		
@@ -23,18 +24,18 @@ public class StudentGUI {
 		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		list.setVisibleRowCount(10);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.addListSelectionListener(l -> {
+			refresh();
+		});
 		panel.add(scroller);
 		
-		scoreArea = new JTextArea(20, 25);
-		scoreArea.setEditable(false);
-		list.addListSelectionListener(a -> {
-			if (!a.getValueIsAdjusting()) {
-				refresh();
-			}
-		});
-		JScrollPane scrollPane = new JScrollPane(scoreArea);
-		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scoreList = new JList<ScoreChange>();
+		scoreList.setFixedCellWidth(350);
+		JScrollPane scrollPane = new JScrollPane(scoreList);
+		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scoreList.setVisibleRowCount(10);
+		scoreList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel.add(scrollPane);
 		
 		JPanel rightPanel = new JPanel();
@@ -43,6 +44,7 @@ public class StudentGUI {
 		JTextField scoreField = new JTextField(20);
 		JTextField reasonField = new JTextField(20);
 		JButton scoreButton = new JButton("计分");
+		JButton deleteButton = new JButton("删除");
 		scoreButton.addActionListener(a -> {
 			try {
 				if (list.getSelectedValue() != null) {
@@ -54,7 +56,25 @@ public class StudentGUI {
 				Utils.showMsgbox("请输入正确的数字", "错误");
 			} finally {
 				try {
-					Student.saveAll(new File("score.ini"));
+					Student.saveAll(new File("score.ser"));
+				} catch (IOException e) {
+					Utils.showErrorMsgbox(e);
+				}
+				refresh();
+			}
+		});
+		deleteButton.addActionListener(a -> {
+			try {
+				if (list.getSelectedValue() != null && scoreList.getSelectedValue() != null) {
+					list.getSelectedValue().removeRecord(scoreList.getSelectedValue());
+				} else {
+					Utils.showMsgbox("你还没有选中", "错误");
+				}
+			} catch (Exception e) {
+				Utils.showErrorMsgbox(e);
+			} finally {
+				try {
+					Student.saveAll(new File("score.ser"));
 				} catch (IOException e) {
 					Utils.showErrorMsgbox(e);
 				}
@@ -100,6 +120,7 @@ public class StudentGUI {
 		panel1.add(saveLabel);
 		JPanel panel2 = new JPanel();
 		panel2.add(scoreButton);
+		panel2.add(deleteButton);
 		JPanel panel3 = new JPanel();
 		panel3.add(saveButton);
 		JPanel panel4 = new JPanel();
@@ -116,15 +137,15 @@ public class StudentGUI {
 		rightPanel.add(panel5);
 		panel.add(rightPanel);
 		
+		refresh();
 		frame.getContentPane().add(panel);
-		frame.setSize(600, 400);
+		frame.setSize(600, 500);
 		frame.setVisible(true);
 	}
 	
 	private void refresh() {
 		if (list.getSelectedValue() != null) {
-			scoreArea.setText(list.getSelectedValue().getAllRecord());
-		}
+			scoreList.setListData(list.getSelectedValue().getAllRecord());		}
 	}
 
 }

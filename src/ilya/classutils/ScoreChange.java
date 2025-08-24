@@ -21,7 +21,6 @@ public class ScoreChange implements Serializable {
 		time = t;
 		reason = r;
 		point = p;
-		owner.modifyScore(p);
 		left = owner.getScore();
 	}
 	

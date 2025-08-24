@@ -74,6 +74,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+		setWindows();
 		if (args.length != 0) {
 			ArrayList<String> argList = new ArrayList<String>(Arrays.asList(args));
 			if (argList.contains("--initialize")) {
@@ -99,6 +100,14 @@ public class Main {
 		try {
 //			throw new RuntimeException("Test exception");
 			new Main().go();
+		} catch (Exception e) {
+			Utils.showErrorMsgbox(e);
+		}
+	}
+	
+	public static void setWindows() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			Utils.showErrorMsgbox(e);
 		}
