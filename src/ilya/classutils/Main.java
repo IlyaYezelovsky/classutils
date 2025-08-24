@@ -2,6 +2,7 @@ package ilya.classutils;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 
@@ -14,6 +15,11 @@ public class Main {
 		frame = new JFrame("Class 15 Utilities v2.0.1");
 		panel = new JPanel();
 		
+		JButton studentButton = new JButton("学生列表");
+		studentButton.addActionListener(a -> {
+			new StudentGUI(Student.LIST.toArray(new Student[29])).go();
+		});
+		
 		JButton extractButton = new JButton("随机抽取");
 		extractButton.addActionListener(a -> {
 			new Extract().go();
@@ -24,6 +30,7 @@ public class Main {
 			new Seat().go();
 		});
 		
+		panel.add(studentButton);
 		panel.add(extractButton);
 		panel.add(seatButton);
 		
@@ -61,15 +68,46 @@ public class Main {
 		panel.add(exitButton);
 		
 		frame.getContentPane().add(panel);
-		frame.setSize(150, 180);
+		frame.setSize(150, 220);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
 
 	public static void main(String[] args) {
+		setWindows();
+		if (args.length != 0) {
+			ArrayList<String> argList = new ArrayList<String>(Arrays.asList(args));
+			if (argList.contains("--initialize")) {
+				Student.initializeList();
+			} else {
+				try {
+					Student.loadAll();
+				} catch (IOException e) {
+					Utils.showErrorMsgbox(e);
+				}
+			}
+		} else {
+			try {
+				Student.loadAll();
+			} catch (IOException e) {
+				Utils.showErrorMsgbox(e);
+			}
+		}
+		launch();
+	}
+	
+	private static void launch() {
 		try {
 //			throw new RuntimeException("Test exception");
 			new Main().go();
+		} catch (Exception e) {
+			Utils.showErrorMsgbox(e);
+		}
+	}
+	
+	public static void setWindows() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			Utils.showErrorMsgbox(e);
 		}
