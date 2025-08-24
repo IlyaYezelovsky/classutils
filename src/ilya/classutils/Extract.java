@@ -239,7 +239,7 @@ public class Extract {
 		panel.add(rightPanel);
 		
 		frame.getContentPane().add(panel);
-		frame.setSize(850, 250);
+		frame.setSize(850, 275);
 		frame.setVisible(true);
 	}
 	

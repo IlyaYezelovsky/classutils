@@ -61,15 +61,24 @@ public class Main {
 		panel.add(exitButton);
 		
 		frame.getContentPane().add(panel);
-		frame.setSize(150, 180);
+		frame.setSize(150, 160);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
 
 	public static void main(String[] args) {
+		setWindows();
 		try {
 //			throw new RuntimeException("Test exception");
 			new Main().go();
+		} catch (Exception e) {
+			Utils.showErrorMsgbox(e);
+		}
+	}
+	
+	public static void setWindows() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			Utils.showErrorMsgbox(e);
 		}
