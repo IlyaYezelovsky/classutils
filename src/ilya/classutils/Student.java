@@ -24,14 +24,13 @@ public class Student implements Serializable, Comparable<Student> {
 	
 	public static void initializeList() {
 /*
- * "01♀宋奕妍", "02♂黄文林", "03♂李楚誉", "04♂苏浦", "05♂梁键", "06♂刘浩然", 
+ * "02♂黄文林", "03♂李楚誉", "04♂苏浦", "05♂梁键", "06♂刘浩然", 
  * "07♂王张向阳", "08♀周淑艺", "09♂陶云良", "10♂陈陆", "11♂吴金桐", "12♂周谢予", 
  * "13♂莫之瑜", "14♂黎泳麟", "15♀麦珊", "16♀陈杨慧", "17♀林世凤", "18♀郑好", 
  * "19♂刘朝奕", "20♂陈禹州", "21♂黄天银", "22♀钟丹彤", "23♂杨振梁", "24♂梁钦瑜", 
  * "25♂田槟榕", "26♂朱伟余", "27♀周花吉", "28♀陈昱彤", "29♀潘思宇"
  */
 		List<Student> temp = List.of(
-				new Student(1, "宋奕妍", false),
 				new Student(2, "黄文林", true),
 				new Student(3, "李楚誉", true),
 				new Student(4, "苏浦", true),
