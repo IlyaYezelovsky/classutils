@@ -19,39 +19,47 @@ public class Extract {
 	private int sex = 0;
 	private Random rd;
 	
-	public String getRandomStudent() {
+	public Student getRandomStudent() {
 		refresh();
-		return Utils.LIST_ALL[rd.nextInt(29)];
+		return Student.LIST.toArray(new Student[28])[rd.nextInt(28)];
 	}
 	
-	public String getRandomBoy() {
+	public Student getRandomBoy() {
 		refresh();
-		return Utils.LIST_BOY[rd.nextInt(19)];
+		Student s = getRandomStudent(); 
+		while (!s.getSex()) {
+			s = getRandomStudent();
+		}
+		return s;
 	}
 	
-	public String getRandomGirl() {
+	public Student getRandomGirl() {
 		refresh();
-		return Utils.LIST_GIRL[rd.nextInt(10)];
+		Student s = getRandomStudent(); 
+		while (s.getSex()) {
+			s = getRandomStudent();
+		}
+		return s;
 	}
 	
-	public String[] getRandomStudent(int num, boolean allowRepeat) {
+	public Student[] getRandomStudent(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			ArrayList<String> list = new ArrayList<String>();
+			ArrayList<Student> list = new ArrayList<Student>();
 			if (num < 1 || num > 29) {
 				throw new IllegalArgumentException("必须输入[1, 29]的整数，但却发现了「" + num + "」");
 			}
 			while (list.size() < num) {
-				String i = getRandomStudent();
+				Student i = getRandomStudent();
 				if (!list.contains(i)) {
 					list.add(i);
 				}
 			}
-			return list.toArray(new String[num]);
+			return list.toArray(new Student[num]);
 		} else {
 			if (num < 1) {
 				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
 			}
-			String[] result = new String[num];
+			Student[] result = new Student[num];
 			for (int i = 0; i < num; i++) {
 				result[i] = getRandomStudent();
 			}
@@ -59,24 +67,24 @@ public class Extract {
 		}
 	}
 	
-	public String[] getRandomBoy(int num, boolean allowRepeat) {
+	public Student[] getRandomBoy(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			ArrayList<String> list = new ArrayList<String>();
+			ArrayList<Student> list = new ArrayList<Student>();
 			if (num < 1 || num > 19) {
 				throw new IllegalArgumentException("必须输入[1, 19]的整数，但却发现了「" + num + "」");
 			}
 			while (list.size() < num) {
-				String i = getRandomBoy();
+				Student i = getRandomBoy();
 				if (!list.contains(i)) {
 					list.add(i);
 				}
 			}
-			return list.toArray(new String[num]);
+			return list.toArray(new Student[num]);
 		} else {
 			if (num < 1) {
 				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
 			}
-			String[] result = new String[num];
+			Student[] result = new Student[num];
 			for (int i = 0; i < num; i++) {
 				result[i] = getRandomBoy();
 			}
@@ -84,24 +92,24 @@ public class Extract {
 		}
 	}
 	
-	public String[] getRandomGirl(int num, boolean allowRepeat) {
+	public Student[] getRandomGirl(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			ArrayList<String> list = new ArrayList<String>();
+			ArrayList<Student> list = new ArrayList<Student>();
 			if (num < 1 || num > 10) {
 				throw new IllegalArgumentException("必须输入[1, 10]的整数，但却发现了「" + num + "」");
 			}
 			while (list.size() < num) {
-				String i = getRandomGirl();
+				Student i = getRandomGirl();
 				if (!list.contains(i)) {
 					list.add(i);
 				}
 			}
-			return list.toArray(new String[num]);
+			return list.toArray(new Student[num]);
 		} else {
 			if (num < 1) {
 				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
 			}
-			String[] result = new String[num];
+			Student[] result = new Student[num];
 			for (int i = 0; i < num; i++) {
 				result[i] = getRandomGirl();
 			}
@@ -109,19 +117,19 @@ public class Extract {
 		}
 	}
 	
-	public String[] getRandomStudent(int num) {
+	public Student[] getRandomStudent(int num) {
 		return getRandomStudent(num, false);
 	}
 	
-	public String[] getRandomBoy(int num) {
+	public Student[] getRandomBoy(int num) {
 		return getRandomBoy(num, false);
 	}
 	
-	public String[] getRandomGirl(int num) {
+	public Student[] getRandomGirl(int num) {
 		return getRandomGirl(num, false);
 	}
 	
-	public String getRandom(int type) {
+	public Student getRandom(int type) {
 		switch (type) {
 		case 0: return getRandomStudent();
 		case 1: return getRandomBoy();
@@ -130,7 +138,7 @@ public class Extract {
 		}
 	}
 	
-	public String[] getRandom(int type, int num, boolean allowRepeat) {
+	public Student[] getRandom(int type, int num, boolean allowRepeat) {
 		switch (type) {
 		case 0: return getRandomStudent(num, allowRepeat);
 		case 1: return getRandomBoy(num, allowRepeat);
@@ -139,7 +147,7 @@ public class Extract {
 		}
 	}
 	
-	public String[] getRandom(int type, int num) {
+	public Student[] getRandom(int type, int num) {
 		return getRandom(type, num, false);
 	}
 	
@@ -239,7 +247,7 @@ public class Extract {
 		panel.add(rightPanel);
 		
 		frame.getContentPane().add(panel);
-		frame.setSize(850, 250);
+		frame.setSize(850, 275);
 		frame.setVisible(true);
 	}
 	
@@ -262,7 +270,7 @@ public class Extract {
 	}
 	
 	private void showResult(int type, int num, boolean allowRepeat) {
-		String[] result = getRandom(type, num, allowRepeat);
+		Student[] result = getRandom(type, num, allowRepeat);
 		StringBuffer sb = new StringBuffer();
 		sb.append(Utils.getTime() + " ");
 		sb.append(getMode() + " " + getRepeat() + num + "个\n");

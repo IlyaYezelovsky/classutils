@@ -48,7 +48,7 @@ public class Seat {
 			try {
 				export();
 			} catch (Exception e) {
-				Utils.showMsgbox("必须先抽取才能导出！", "错误");
+				Utils.showErrorMsgbox(e);
 			}
 		});
 		
@@ -88,16 +88,20 @@ public class Seat {
 		frame.setVisible(true);
 	}
 	
-	public String[] generateList() {
-		return (latest = ext.getRandom(0, 29));
+	public void generateList() {
+		Student[] temp = ext.getRandom(0, 28, false);
+		latest = new String[28];
+		for (int i = 0; i < 28; i++) {
+			latest[i] = temp[i].toString();
+		}
 	}
 	
 	public String generateString() {
 		generateList();
 		StringBuffer sb = new StringBuffer();
 		sb.append(Utils.getTime() + " 座位自动编排\n");
-		for (int i = 0; i < 29; i++) {
-			sb.append("(" + (int)((i + 1) / 5 + 1) + "," + ((i + 1) % 5 + 1) + ")" + latest[i] + "\n");
+		for (int i = 0; i < 28; i++) {
+			sb.append("(" + (int)((i + 2) / 5 + 1) + "," + ((i + 2) % 5 + 1) + ")" + latest[i] + "\n");
 		}
 		sb.append("----\n");
 		return sb.toString();
@@ -146,7 +150,7 @@ public class Seat {
 			}
 			String[] list = latest;
 			int i = 0;
-			for (int j = 5; j > 1; j--, i++) {
+			for (int j = 4; j > 1; j--, i++) {
 				setCellValue(sheet, j, 1, list[i]);
 			}
 			for (int j = 2; j < 7; j++) {

@@ -9,14 +9,15 @@ public class StudentGUI {
 	private JPanel panel;
 	private JList<Student> list;
 	private JList<ScoreChange> scoreList;
+	private JLabel leftLabel;
 	
-	public StudentGUI(Student[] array) {
-		list = new JList<Student>(array);
+	public StudentGUI() {
+		list = new JList<Student>(Student.LIST.toArray(new Student[28]));
 	}
 	
 	public void go() {
 		
-		frame = new JFrame("学生列表");
+		frame = new JFrame("计分管理");
 		panel = new JPanel();
 		
 		JScrollPane scroller = new JScrollPane(list);
@@ -27,7 +28,12 @@ public class StudentGUI {
 		list.addListSelectionListener(l -> {
 			refresh();
 		});
-		panel.add(scroller);
+		JPanel leftPanel = new JPanel();
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+		leftPanel.add(scroller);
+		leftLabel = new JLabel("当前分数：0");
+		leftPanel.add(leftLabel);
+		panel.add(leftPanel);
 		
 		scoreList = new JList<ScoreChange>();
 		scoreList.setFixedCellWidth(350);
@@ -55,11 +61,7 @@ public class StudentGUI {
 			} catch (NumberFormatException e) {
 				Utils.showMsgbox("请输入正确的数字", "错误");
 			} finally {
-				try {
-					Student.saveAll(new File("score.ser"));
-				} catch (IOException e) {
-					Utils.showErrorMsgbox(e);
-				}
+				Student.saveAll();
 				refresh();
 			}
 		});
@@ -73,11 +75,7 @@ public class StudentGUI {
 			} catch (Exception e) {
 				Utils.showErrorMsgbox(e);
 			} finally {
-				try {
-					Student.saveAll(new File("score.ser"));
-				} catch (IOException e) {
-					Utils.showErrorMsgbox(e);
-				}
+				Student.saveAll();
 				refresh();
 			}
 		});
@@ -87,11 +85,9 @@ public class StudentGUI {
 			JFileChooser fc = new JFileChooser();
 			fc.showSaveDialog(frame);
 			if (fc.getSelectedFile() != null) {
-				try {
-					Student.saveAll(fc.getSelectedFile());
-				} catch (IOException e) {
-					Utils.showErrorMsgbox(e);
-				}
+				Student.saveAll(fc.getSelectedFile());
+				refresh();
+				Utils.showMsgbox("保存成功", "提示");
 			}
 		});
 		JButton loadButton = new JButton("加载");
@@ -99,15 +95,18 @@ public class StudentGUI {
 			JFileChooser fc = new JFileChooser();
 			fc.showOpenDialog(frame);
 			if (fc.getSelectedFile() != null) {
-				try {
-					Student.loadAll(fc.getSelectedFile());
-				} catch (Exception e) {
-					Utils.showErrorMsgbox(e);
-				}
+				Student.loadAll(fc.getSelectedFile());
+				list.setSelectedValue(null, true);
+				leftLabel.setText("当前分数：0");
+				scoreList.setListData(new ScoreChange[0]);
+				list.setListData(Student.LIST.toArray(new Student[28]));
+				refresh();
+				Utils.showMsgbox("加载成功", "提示");
 			}
 		});
 		JButton exitButton = new JButton("返回");
 		exitButton.addActionListener(a -> {
+			Student.saveAll();
 			frame.dispose();
 		});
 		JPanel panelA = new JPanel();
@@ -139,13 +138,15 @@ public class StudentGUI {
 		
 		refresh();
 		frame.getContentPane().add(panel);
-		frame.setSize(600, 500);
+		frame.setSize(600, 480);
 		frame.setVisible(true);
 	}
 	
-	private void refresh() {
+	public void refresh() {
 		if (list.getSelectedValue() != null) {
-			scoreList.setListData(list.getSelectedValue().getAllRecord());		}
+			scoreList.setListData(list.getSelectedValue().getAllRecord());
+			leftLabel.setText("当前分数：" + list.getSelectedValue().getScore());
+		}
 	}
 
 }

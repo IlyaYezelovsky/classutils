@@ -20,7 +20,7 @@ public class Student implements Serializable, Comparable<Student> {
 		return x;
 	}
 	
-	public static TreeSet<Student> LIST;
+	static TreeSet<Student> LIST;
 	
 	public static void initializeList() {
 /*
@@ -119,38 +119,44 @@ public class Student implements Serializable, Comparable<Student> {
 		return (o instanceof Student && o.toString().equals(this.toString()));
 	}
 	
-	public static void saveAll(File file) throws IOException {
-		FileOutputStream fs = new FileOutputStream(file);
-		ObjectOutputStream os = new ObjectOutputStream(fs);
-		os.writeObject(LIST);
-		os.close();
-	}
-	
-	public static void saveAll() throws IOException {
+	public static void saveAll(File file) {
 		try {
-			saveAll(new File("score.ser"));
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
+			os.writeObject(LIST);
+			os.close();
 		} catch (IOException e) {
 			Utils.showErrorMsgbox(e);
 		}
 	}
 	
-	public static void loadAll(File file) throws IOException, ClassNotFoundException {
-		FileInputStream fs = new FileInputStream(file);
-		ObjectInputStream os = new ObjectInputStream(fs);
-		LIST = (TreeSet<Student>) os.readObject();
-		os.close();
+	public static void saveAll() {
+		saveAll(new File("score.ser"));
 	}
 	
-	public static void loadAll() throws IOException {
+	public static void loadAll(File file) {
 		try {
-			loadAll(new File("score.ser"));
-		} catch (Exception e) {
+			ObjectInputStream os = new ObjectInputStream(new FileInputStream(file));
+			Object obj = os.readObject();
+			if (obj instanceof TreeSet) {
+				TreeSet<?> set = (TreeSet<?>) obj;
+				if (set.getFirst() instanceof Student) {
+					LIST = (TreeSet<Student>) set;
+				}
+			}
+			System.out.println(file.getAbsolutePath());
+			
+			os.close();
+		} catch (ClassNotFoundException | IOException e) {
 			Utils.showErrorMsgbox(e);
 		}
 	}
 	
-	public boolean removeRecord(ScoreChange record) {
-		return scoreChangeList.remove(record);
+	public static void loadAll() {
+		loadAll(new File("score.ser"));
+	}
+	
+	public void removeRecord(ScoreChange record) {
+		scoreChangeList.remove(record);
 	}
 
 }

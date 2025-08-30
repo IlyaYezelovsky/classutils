@@ -14,14 +14,12 @@ public class ScoreChange implements Serializable {
 	private String reason;
 	private Student owner;
 	private int point;
-	private int left;
 	
 	public ScoreChange(Student o, ZonedDateTime t, String r, int p) {
 		owner = o;
 		time = t;
 		reason = r;
 		point = p;
-		left = owner.getScore();
 	}
 	
 	public ScoreChange(Student o, String r, int p) {
@@ -44,13 +42,9 @@ public class ScoreChange implements Serializable {
 		return point;
 	}
 	
-	public int getLeft() {
-		return left;
-	}
-	
 	@Override
 	public String toString() {
-		return owner.getName() + "于" + Utils.getTime(getTime()) + "因" + getReason() + Utils.pm(getPoint()) + " (剩余" + getLeft() + "分)";
+		return owner.getName() + "于" + Utils.getTime(getTime()) + "因" + getReason() + Utils.pm(getPoint()) + "分";
 	}
 
 }
