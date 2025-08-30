@@ -143,7 +143,6 @@ public class Student implements Serializable, Comparable<Student> {
 					LIST = (TreeSet<Student>) set;
 				}
 			}
-			System.out.println(file.getAbsolutePath());
 			
 			os.close();
 		} catch (ClassNotFoundException | IOException e) {
