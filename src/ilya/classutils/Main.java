@@ -76,7 +76,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		setWindows();
-		test = true;
+		test = false;
 		if (args.length != 0 || test) {
 			ArrayList<String> argList = new ArrayList<String>(Arrays.asList(args));
 			if (argList.contains("--initialize") || test) {
