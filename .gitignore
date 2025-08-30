@@ -56,3 +56,5 @@ replay_pid*
 
 # BlueJ files
 *.ctxt
+score.ser
+*.ser

@@ -2,6 +2,7 @@ package ilya.classutils;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 
@@ -9,10 +10,16 @@ public class Main {
 	
 	private JFrame frame;
 	private JPanel panel;
+	private static boolean test;
 	
 	public void go() {
-		frame = new JFrame("Class 15 Utilities v2.0.2");
+		frame = new JFrame("Class 15 Utilities v2.1.0");
 		panel = new JPanel();
+		
+		JButton studentButton = new JButton("计分管理");
+		studentButton.addActionListener(a -> {
+			new StudentGUI().go();
+		});
 		
 		JButton extractButton = new JButton("随机抽取");
 		extractButton.addActionListener(a -> {
@@ -24,6 +31,7 @@ public class Main {
 			new Seat().go();
 		});
 		
+		panel.add(studentButton);
 		panel.add(extractButton);
 		panel.add(seatButton);
 		
@@ -40,8 +48,8 @@ public class Main {
 			JPanel panel2 = new JPanel();
 			JPanel panel3 = new JPanel();
 			JPanel panel4 = new JPanel();
-			panel1.add(new JLabel("Class 15 Utils"));
-			panel2.add(new JLabel("v2.0.2 on 2025.8.24"));
+			panel1.add(new JLabel("Class 15 Utilities"));
+			panel2.add(new JLabel("v2.1.0 on 2025.8.30"));
 			panel3.add(new JLabel("by IlyaYezelovsky"));
 			panel4.add(ok);
 			mPanel.add(panel1);
@@ -61,15 +69,30 @@ public class Main {
 		panel.add(exitButton);
 		
 		frame.getContentPane().add(panel);
-		frame.setSize(150, 160);
+		frame.setSize(150, 185);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
 
 	public static void main(String[] args) {
 		setWindows();
+		test = true;
+		if (args.length != 0 || test) {
+			ArrayList<String> argList = new ArrayList<String>(Arrays.asList(args));
+			if (argList.contains("--initialize") || test) {
+				Student.initializeList();
+			} else {
+				Student.loadAll();
+			}
+		} else {
+			Student.loadAll();
+		}
+		launch();
+	}
+	
+	private static void launch() {
 		try {
-//			throw new RuntimeException("Test exception");
+//			throw new Exception("Test exception");
 			new Main().go();
 		} catch (Exception e) {
 			Utils.showErrorMsgbox(e);
