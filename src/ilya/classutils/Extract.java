@@ -6,7 +6,7 @@ import java.util.*;
 import javax.swing.*;
 
 public class Extract {
-	
+
 	private JFrame frame;
 	private JPanel panel;
 	private JRadioButton allRadio;
@@ -18,30 +18,30 @@ public class Extract {
 	private StringBuffer output;
 	private int sex = 0;
 	private Random rd;
-	
+
 	public Student getRandomStudent() {
 		refresh();
 		return Student.LIST.toArray(new Student[28])[rd.nextInt(28)];
 	}
-	
+
 	public Student getRandomBoy() {
 		refresh();
-		Student s = getRandomStudent(); 
+		Student s = getRandomStudent();
 		while (!s.getSex()) {
 			s = getRandomStudent();
 		}
 		return s;
 	}
-	
+
 	public Student getRandomGirl() {
 		refresh();
-		Student s = getRandomStudent(); 
+		Student s = getRandomStudent();
 		while (s.getSex()) {
 			s = getRandomStudent();
 		}
 		return s;
 	}
-	
+
 	public Student[] getRandomStudent(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
 			ArrayList<Student> list = new ArrayList<Student>();
@@ -66,7 +66,7 @@ public class Extract {
 			return result;
 		}
 	}
-	
+
 	public Student[] getRandomBoy(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
 			ArrayList<Student> list = new ArrayList<Student>();
@@ -91,7 +91,7 @@ public class Extract {
 			return result;
 		}
 	}
-	
+
 	public Student[] getRandomGirl(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
 			ArrayList<Student> list = new ArrayList<Student>();
@@ -116,46 +116,54 @@ public class Extract {
 			return result;
 		}
 	}
-	
+
 	public Student[] getRandomStudent(int num) {
 		return getRandomStudent(num, false);
 	}
-	
+
 	public Student[] getRandomBoy(int num) {
 		return getRandomBoy(num, false);
 	}
-	
+
 	public Student[] getRandomGirl(int num) {
 		return getRandomGirl(num, false);
 	}
-	
+
 	public Student getRandom(int type) {
 		switch (type) {
-		case 0: return getRandomStudent();
-		case 1: return getRandomBoy();
-		case 2: return getRandomGirl();
-		default: throw new IllegalArgumentException();
+		case 0:
+			return getRandomStudent();
+		case 1:
+			return getRandomBoy();
+		case 2:
+			return getRandomGirl();
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
-	
+
 	public Student[] getRandom(int type, int num, boolean allowRepeat) {
 		switch (type) {
-		case 0: return getRandomStudent(num, allowRepeat);
-		case 1: return getRandomBoy(num, allowRepeat);
-		case 2: return getRandomGirl(num, allowRepeat);
-		default: throw new IllegalArgumentException();
+		case 0:
+			return getRandomStudent(num, allowRepeat);
+		case 1:
+			return getRandomBoy(num, allowRepeat);
+		case 2:
+			return getRandomGirl(num, allowRepeat);
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
-	
+
 	public Student[] getRandom(int type, int num) {
 		return getRandom(type, num, false);
 	}
-	
+
 	public void go() {
 		frame = new JFrame("随机抽取");
 		panel = new JPanel();
 		panel.setLayout(new FlowLayout());
-		
+
 		JPanel selectPanel = new JPanel();
 		selectPanel.setLayout(new BoxLayout(selectPanel, BoxLayout.Y_AXIS));
 		ButtonGroup group = new ButtonGroup();
@@ -172,7 +180,7 @@ public class Extract {
 		repeatBox = new JCheckBox("允许重复");
 		selectPanel.add(repeatBox);
 		panel.add(selectPanel);
-		
+
 		JPanel quickPanel = new JPanel();
 		JButton button1 = new JButton("1");
 		JButton button2 = new JButton("2");
@@ -205,7 +213,7 @@ public class Extract {
 		JButton okButton = new JButton("抽取");
 		JButton clearButton = new JButton("清屏");
 		JButton copyButton = new JButton("复制");
-		
+
 		clearButton.addActionListener(a -> {
 			output.delete(0, output.length());
 			outputArea.setText("");
@@ -220,7 +228,7 @@ public class Extract {
 			Utils.copy(output.toString());
 		});
 		okButton.addActionListener(new InputListener());
-		
+
 		inputPanel.setLayout(new FlowLayout());
 		inputPanel.add(inputField);
 		inputPanel.add(okButton);
@@ -232,9 +240,9 @@ public class Extract {
 		middlePanel.add(quickPanel);
 		middlePanel.add(inputPanel);
 		panel.add(middlePanel);
-		
+
 		output = new StringBuffer();
-		
+
 		outputArea = new JTextArea(12, 40);
 		outputArea.setEditable(false);
 		outputArea.setLineWrap(true);
@@ -245,12 +253,12 @@ public class Extract {
 		JPanel rightPanel = new JPanel();
 		rightPanel.add(scroller);
 		panel.add(rightPanel);
-		
+
 		frame.getContentPane().add(panel);
 		frame.setSize(850, 275);
 		frame.setVisible(true);
 	}
-	
+
 	private int getSex() {
 		if (boyRadio.isSelected()) {
 			return 1;
@@ -260,15 +268,15 @@ public class Extract {
 			return 0;
 		}
 	}
-	
+
 	public final static int ALL_SEX = 0;
 	public final static int BOY_ONLY = 1;
 	public final static int GIRL_ONLY = 2;
-	
+
 	private boolean repeatAllowed() {
 		return repeatBox.isSelected();
 	}
-	
+
 	private void showResult(int type, int num, boolean allowRepeat) {
 		Student[] result = getRandom(type, num, allowRepeat);
 		StringBuffer sb = new StringBuffer();
@@ -281,7 +289,7 @@ public class Extract {
 		output.append(sb.toString());
 		outputArea.setText(output.toString());
 	}
-	
+
 	private class InputListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -292,7 +300,7 @@ public class Extract {
 			}
 		}
 	}
-	
+
 	private String getMode() {
 		if (boyRadio.isSelected()) {
 			return "仅限男生";
@@ -302,7 +310,7 @@ public class Extract {
 			return "不限性别";
 		}
 	}
-	
+
 	private String getRepeat() {
 		if (repeatAllowed()) {
 			return "允许重复";
@@ -310,7 +318,7 @@ public class Extract {
 			return "不允许重复";
 		}
 	}
-	
+
 	private void refresh() {
 		rd = new Random((long) (Long.MAX_VALUE * Math.random()));
 	}

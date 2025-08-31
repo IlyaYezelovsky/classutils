@@ -141,7 +141,7 @@ public class StudentGUI {
 		frame.setSize(600, 480);
 		frame.setVisible(true);
 	}
-	
+
 	public void refresh() {
 		if (list.getSelectedValue() != null) {
 			scoreList.setListData(list.getSelectedValue().getAllRecord());
