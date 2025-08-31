@@ -2,8 +2,7 @@ package ilya.classutils;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;

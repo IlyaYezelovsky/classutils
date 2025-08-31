@@ -2,7 +2,9 @@ package ilya.classutils;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.*;
+import java.time.*;
+import java.time.temporal.*;
 import java.util.*;
 import javax.swing.*;
 
@@ -11,6 +13,7 @@ public class Main {
 	private JFrame frame;
 	private JPanel panel;
 	private static boolean test;
+	private JLabel duty;
 	
 	public void go() {
 		frame = new JFrame("Class 15 Utilities v2.1.1");
@@ -68,8 +71,11 @@ public class Main {
 		});
 		panel.add(exitButton);
 		
+		duty = new JLabel(DutyManager.getTodayDuty());
+		panel.add(duty);
+		
 		frame.getContentPane().add(panel);
-		frame.setSize(150, 185);
+		frame.setSize(150, 200);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
@@ -105,6 +111,48 @@ public class Main {
 		} catch (Exception e) {
 			Utils.showErrorMsgbox(e);
 		}
+	}
+	
+	public class DutyManager {
+		
+		private static final LocalDate FIRST_DAY = LocalDate.of(2025, 8, 25);
+		private static final String[][] DUTY_PATTERN = {
+		        {"A", "C"}, // 第1天
+		        {"B", "D"}, // 第2天
+		        {"C", "A"}, // 第3天
+		        {"D", "B"}  // 第4天
+		};
+		public static String getTodayDuty() {
+			
+	        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Irkutsk"));
+	        LocalDate today = now.toLocalDate();
+	        
+	        long workingDays = calculateWorkingDays(FIRST_DAY, today);
+	        
+	        int patternIndex = (int) (workingDays % 4);
+	        String[] duty = DUTY_PATTERN[patternIndex];
+	        
+	        return String.format("值日生：教室%s/包干区%s", duty[0], duty[1]);
+	    }
+		
+		private static long calculateWorkingDays(LocalDate startDate, LocalDate endDate) {
+	        long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
+	        long workingDays = 0;
+	        
+	        for (long i = 0; i <= totalDays; i++) {
+	            LocalDate currentDate = startDate.plusDays(i);
+	            if (!isWeekend(currentDate)) {
+	                workingDays++;
+	            }
+	        }
+	        
+	        return workingDays;
+	    }
+		
+		private static boolean isWeekend(LocalDate date) {
+	        return date.getDayOfWeek().getValue() >= 6;
+	    }
+
 	}
 
 }
