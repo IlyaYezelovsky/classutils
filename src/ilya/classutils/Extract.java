@@ -3,10 +3,24 @@ package ilya.classutils;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+
 import javax.swing.*;
 
 public class Extract {
 
+	private class InputListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				showResult(getSex(), Integer.parseInt(inputField.getText()), repeatAllowed());
+			} catch (Exception e1) {
+				Utils.showMsgbox("不正确的输入", "错误", 80, 100);
+			}
+		}
+	}
+	public final static int ALL_SEX = 0;
+	public final static int BOY_ONLY = 1;
+	public final static int GIRL_ONLY = 2;
 	private JFrame frame;
 	private JPanel panel;
 	private JRadioButton allRadio;
@@ -14,14 +28,53 @@ public class Extract {
 	private JRadioButton girlRadio;
 	private JCheckBox repeatBox;
 	private JTextField inputField;
+
 	private JTextArea outputArea;
+
 	private StringBuffer output;
+
 	private int sex = 0;
+
 	private Random rd;
 
-	public Student getRandomStudent() {
-		refresh();
-		return Student.LIST.toArray(new Student[28])[rd.nextInt(28)];
+	private String getMode() {
+		if (boyRadio.isSelected()) {
+			return "仅限男生";
+		} else if (girlRadio.isSelected()) {
+			return "仅限女生";
+		} else {
+			return "不限性别";
+		}
+	}
+
+	public Student getRandom(int type) {
+		switch (type) {
+			case 0:
+				return getRandomStudent();
+			case 1:
+				return getRandomBoy();
+			case 2:
+				return getRandomGirl();
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
+
+	public Student[] getRandom(int type, int num) {
+		return getRandom(type, num, false);
+	}
+
+	public Student[] getRandom(int type, int num, boolean allowRepeat) {
+		switch (type) {
+			case 0:
+				return getRandomStudent(num, allowRepeat);
+			case 1:
+				return getRandomBoy(num, allowRepeat);
+			case 2:
+				return getRandomGirl(num, allowRepeat);
+			default:
+				throw new IllegalArgumentException();
+		}
 	}
 
 	public Student getRandomBoy() {
@@ -33,43 +86,13 @@ public class Extract {
 		return s;
 	}
 
-	public Student getRandomGirl() {
-		refresh();
-		Student s = getRandomStudent();
-		while (s.getSex()) {
-			s = getRandomStudent();
-		}
-		return s;
-	}
-
-	public Student[] getRandomStudent(int num, boolean allowRepeat) {
-		if (!allowRepeat) {
-			ArrayList<Student> list = new ArrayList<Student>();
-			if (num < 1 || num > 29) {
-				throw new IllegalArgumentException("必须输入[1, 29]的整数，但却发现了「" + num + "」");
-			}
-			while (list.size() < num) {
-				Student i = getRandomStudent();
-				if (!list.contains(i)) {
-					list.add(i);
-				}
-			}
-			return list.toArray(new Student[num]);
-		} else {
-			if (num < 1) {
-				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
-			}
-			Student[] result = new Student[num];
-			for (int i = 0; i < num; i++) {
-				result[i] = getRandomStudent();
-			}
-			return result;
-		}
+	public Student[] getRandomBoy(int num) {
+		return getRandomBoy(num, false);
 	}
 
 	public Student[] getRandomBoy(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			ArrayList<Student> list = new ArrayList<Student>();
+			ArrayList<Student> list = new ArrayList<>();
 			if (num < 1 || num > 19) {
 				throw new IllegalArgumentException("必须输入[1, 19]的整数，但却发现了「" + num + "」");
 			}
@@ -92,9 +115,22 @@ public class Extract {
 		}
 	}
 
+	public Student getRandomGirl() {
+		refresh();
+		Student s = getRandomStudent();
+		while (s.getSex()) {
+			s = getRandomStudent();
+		}
+		return s;
+	}
+
+	public Student[] getRandomGirl(int num) {
+		return getRandomGirl(num, false);
+	}
+
 	public Student[] getRandomGirl(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			ArrayList<Student> list = new ArrayList<Student>();
+			ArrayList<Student> list = new ArrayList<>();
 			if (num < 1 || num > 10) {
 				throw new IllegalArgumentException("必须输入[1, 10]的整数，但却发现了「" + num + "」");
 			}
@@ -117,46 +153,54 @@ public class Extract {
 		}
 	}
 
+	public Student getRandomStudent() {
+		refresh();
+		return Student.LIST.toArray(new Student[28])[rd.nextInt(28)];
+	}
 	public Student[] getRandomStudent(int num) {
 		return getRandomStudent(num, false);
 	}
-
-	public Student[] getRandomBoy(int num) {
-		return getRandomBoy(num, false);
-	}
-
-	public Student[] getRandomGirl(int num) {
-		return getRandomGirl(num, false);
-	}
-
-	public Student getRandom(int type) {
-		switch (type) {
-		case 0:
-			return getRandomStudent();
-		case 1:
-			return getRandomBoy();
-		case 2:
-			return getRandomGirl();
-		default:
-			throw new IllegalArgumentException();
+	public Student[] getRandomStudent(int num, boolean allowRepeat) {
+		if (!allowRepeat) {
+			ArrayList<Student> list = new ArrayList<>();
+			if (num < 1 || num > 29) {
+				throw new IllegalArgumentException("必须输入[1, 29]的整数，但却发现了「" + num + "」");
+			}
+			while (list.size() < num) {
+				Student i = getRandomStudent();
+				if (!list.contains(i)) {
+					list.add(i);
+				}
+			}
+			return list.toArray(new Student[num]);
+		} else {
+			if (num < 1) {
+				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
+			}
+			Student[] result = new Student[num];
+			for (int i = 0; i < num; i++) {
+				result[i] = getRandomStudent();
+			}
+			return result;
 		}
 	}
 
-	public Student[] getRandom(int type, int num, boolean allowRepeat) {
-		switch (type) {
-		case 0:
-			return getRandomStudent(num, allowRepeat);
-		case 1:
-			return getRandomBoy(num, allowRepeat);
-		case 2:
-			return getRandomGirl(num, allowRepeat);
-		default:
-			throw new IllegalArgumentException();
+	private String getRepeat() {
+		if (repeatAllowed()) {
+			return "允许重复";
+		} else {
+			return "不允许重复";
 		}
 	}
 
-	public Student[] getRandom(int type, int num) {
-		return getRandom(type, num, false);
+	private int getSex() {
+		if (boyRadio.isSelected()) {
+			return 1;
+		} else if (girlRadio.isSelected()) {
+			return 2;
+		} else {
+			return 0;
+		}
 	}
 
 	public void go() {
@@ -259,19 +303,9 @@ public class Extract {
 		frame.setVisible(true);
 	}
 
-	private int getSex() {
-		if (boyRadio.isSelected()) {
-			return 1;
-		} else if (girlRadio.isSelected()) {
-			return 2;
-		} else {
-			return 0;
-		}
+	private void refresh() {
+		rd = new Random((long) (Long.MAX_VALUE * Math.random()));
 	}
-
-	public final static int ALL_SEX = 0;
-	public final static int BOY_ONLY = 1;
-	public final static int GIRL_ONLY = 2;
 
 	private boolean repeatAllowed() {
 		return repeatBox.isSelected();
@@ -288,39 +322,6 @@ public class Extract {
 		sb.append("----" + "\n");
 		output.append(sb.toString());
 		outputArea.setText(output.toString());
-	}
-
-	private class InputListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			try {
-				showResult(getSex(), Integer.parseInt(inputField.getText()), repeatAllowed());
-			} catch (Exception e1) {
-				Utils.showMsgbox("不正确的输入", "错误", 80, 100);
-			}
-		}
-	}
-
-	private String getMode() {
-		if (boyRadio.isSelected()) {
-			return "仅限男生";
-		} else if (girlRadio.isSelected()) {
-			return "仅限女生";
-		} else {
-			return "不限性别";
-		}
-	}
-
-	private String getRepeat() {
-		if (repeatAllowed()) {
-			return "允许重复";
-		} else {
-			return "不允许重复";
-		}
-	}
-
-	private void refresh() {
-		rd = new Random((long) (Long.MAX_VALUE * Math.random()));
 	}
 
 }

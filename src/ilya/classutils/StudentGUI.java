@@ -1,25 +1,24 @@
 package ilya.classutils;
 
-import java.io.*;
 import javax.swing.*;
 
 public class StudentGUI {
-	
+
 	private JFrame frame;
 	private JPanel panel;
 	private JList<Student> list;
 	private JList<ScoreChange> scoreList;
 	private JLabel leftLabel;
-	
+
 	public StudentGUI() {
-		list = new JList<Student>(Student.LIST.toArray(new Student[28]));
+		list = new JList<>(Student.LIST.toArray(new Student[28]));
 	}
-	
+
 	public void go() {
-		
+
 		frame = new JFrame("计分管理");
 		panel = new JPanel();
-		
+
 		JScrollPane scroller = new JScrollPane(list);
 		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -34,8 +33,8 @@ public class StudentGUI {
 		leftLabel = new JLabel("当前分数：0");
 		leftPanel.add(leftLabel);
 		panel.add(leftPanel);
-		
-		scoreList = new JList<ScoreChange>();
+
+		scoreList = new JList<>();
 		scoreList.setFixedCellWidth(350);
 		JScrollPane scrollPane = new JScrollPane(scoreList);
 		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -43,7 +42,7 @@ public class StudentGUI {
 		scoreList.setVisibleRowCount(10);
 		scoreList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel.add(scrollPane);
-		
+
 		JPanel rightPanel = new JPanel();
 		JLabel scoreLabel = new JLabel("分数");
 		JLabel reasonLabel = new JLabel("原因");
@@ -135,7 +134,7 @@ public class StudentGUI {
 		rightPanel.add(panel4);
 		rightPanel.add(panel5);
 		panel.add(rightPanel);
-		
+
 		refresh();
 		frame.getContentPane().add(panel);
 		frame.setSize(600, 480);

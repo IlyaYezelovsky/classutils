@@ -1,18 +1,91 @@
 package ilya.classutils;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
 import java.time.*;
 import java.time.temporal.*;
 import java.util.*;
+
 import javax.swing.*;
 
 public class Main {
 
-	private JFrame frame;
-	private JPanel panel;
+	public class DutyManager {
+
+		private static final LocalDate FIRST_DAY = LocalDate.of(2025, 8, 25);
+		private static final String[][] DUTY_PATTERN = { { "A", "C" }, // 第1天
+				{ "B", "D" }, // 第2天
+				{ "C", "A" }, // 第3天
+				{ "D", "B" } // 第4天
+		};
+
+		private static long calculateWorkingDays(LocalDate startDate, LocalDate endDate) {
+			long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
+			long workingDays = 0;
+
+			for (long i = 0; i <= totalDays; i++) {
+				LocalDate currentDate = startDate.plusDays(i);
+				if (!isWeekend(currentDate)) {
+					workingDays++;
+				}
+			}
+
+			return workingDays;
+		}
+
+		public static String getTodayDuty() {
+
+			ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Irkutsk"));
+			LocalDate today = now.toLocalDate();
+
+			long workingDays = calculateWorkingDays(FIRST_DAY, today);
+
+			int patternIndex = (int) (workingDays % 4);
+			String[] duty = DUTY_PATTERN[patternIndex];
+
+			return String.format("值日生：教室%s/包干区%s", duty[0], duty[1]);
+		}
+
+		private static boolean isWeekend(LocalDate date) {
+			return date.getDayOfWeek().getValue() >= 6;
+		}
+
+	}
 	private static boolean test;
+	private static void launch() {
+		try {
+			//			throw new Exception("Test exception");
+			new Main().go();
+		} catch (Exception e) {
+			Utils.showErrorMsgbox(e);
+		}
+	}
+	public static void main(String[] args) {
+		setWindows();
+		test = false;
+		if (args.length != 0 || test) {
+			ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
+			if (argList.contains("--initialize") || test) {
+				Student.initializeList();
+			} else {
+				Student.loadAll();
+			}
+		} else {
+			Student.loadAll();
+		}
+		launch();
+	}
+
+	public static void setWindows() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			Utils.showErrorMsgbox(e);
+		}
+	}
+
+	private JFrame frame;
+
+	private JPanel panel;
+
 	private JLabel duty;
 
 	public void go() {
@@ -76,83 +149,8 @@ public class Main {
 
 		frame.getContentPane().add(panel);
 		frame.setSize(150, 200);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-	}
-
-	public static void main(String[] args) {
-		setWindows();
-		test = false;
-		if (args.length != 0 || test) {
-			ArrayList<String> argList = new ArrayList<String>(Arrays.asList(args));
-			if (argList.contains("--initialize") || test) {
-				Student.initializeList();
-			} else {
-				Student.loadAll();
-			}
-		} else {
-			Student.loadAll();
-		}
-		launch();
-	}
-
-	private static void launch() {
-		try {
-//			throw new Exception("Test exception");
-			new Main().go();
-		} catch (Exception e) {
-			Utils.showErrorMsgbox(e);
-		}
-	}
-
-	public static void setWindows() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			Utils.showErrorMsgbox(e);
-		}
-	}
-
-	public class DutyManager {
-
-		private static final LocalDate FIRST_DAY = LocalDate.of(2025, 8, 25);
-		private static final String[][] DUTY_PATTERN = { { "A", "C" }, // 第1天
-				{ "B", "D" }, // 第2天
-				{ "C", "A" }, // 第3天
-				{ "D", "B" } // 第4天
-		};
-
-		public static String getTodayDuty() {
-
-			ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Irkutsk"));
-			LocalDate today = now.toLocalDate();
-
-			long workingDays = calculateWorkingDays(FIRST_DAY, today);
-
-			int patternIndex = (int) (workingDays % 4);
-			String[] duty = DUTY_PATTERN[patternIndex];
-
-			return String.format("值日生：教室%s/包干区%s", duty[0], duty[1]);
-		}
-
-		private static long calculateWorkingDays(LocalDate startDate, LocalDate endDate) {
-			long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
-			long workingDays = 0;
-
-			for (long i = 0; i <= totalDays; i++) {
-				LocalDate currentDate = startDate.plusDays(i);
-				if (!isWeekend(currentDate)) {
-					workingDays++;
-				}
-			}
-
-			return workingDays;
-		}
-
-		private static boolean isWeekend(LocalDate date) {
-			return date.getDayOfWeek().getValue() >= 6;
-		}
-
 	}
 
 }
