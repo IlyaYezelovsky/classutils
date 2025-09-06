@@ -3,18 +3,26 @@ package ilya.classutils;
 import java.time.*;
 import java.time.temporal.*;
 import java.util.*;
-
 import javax.swing.*;
 
 public class Main {
 
 	public class DutyManager {
 
-		private static final LocalDate FIRST_DAY = LocalDate.of(2025, 8, 25);
-		private static final String[][] DUTY_PATTERN = { { "A", "C" }, // 第1天
-				{ "B", "D" }, // 第2天
-				{ "C", "A" }, // 第3天
-				{ "D", "B" } // 第4天
+		private static final LocalDate FIRST_DAY = LocalDate.of(2025, 8, 24);
+		private static final String[][] DUTY_PATTERN = {
+				{
+						"A", "C"
+				},
+				{
+						"B", "D"
+				},
+				{
+						"C", "A"
+				},
+				{
+						"D", "B"
+				}
 		};
 
 		private static long calculateWorkingDays(LocalDate startDate, LocalDate endDate) {
@@ -49,19 +57,22 @@ public class Main {
 		}
 
 	}
+
 	private static boolean test;
+
 	private static void launch() {
 		try {
-			//			throw new Exception("Test exception");
+			// throw new Exception("Test exception");
 			new Main().go();
 		} catch (Exception e) {
 			Utils.showErrorMsgbox(e);
 		}
 	}
+
 	public static void main(String[] args) {
 		setWindows();
 		test = false;
-		if (args.length != 0 || test) {
+		if ((args.length != 0) || test) {
 			ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
 			if (argList.contains("--initialize") || test) {
 				Student.initializeList();
@@ -83,13 +94,11 @@ public class Main {
 	}
 
 	private JFrame frame;
-
 	private JPanel panel;
-
 	private JLabel duty;
 
 	public void go() {
-		frame = new JFrame("Class 15 Utilities v2.1.2");
+		frame = new JFrame("Class 15 Utilities v2.1.3");
 		panel = new JPanel();
 
 		JButton studentButton = new JButton("计分管理");
@@ -125,7 +134,7 @@ public class Main {
 			JPanel panel3 = new JPanel();
 			JPanel panel4 = new JPanel();
 			panel1.add(new JLabel("Class 15 Utilities"));
-			panel2.add(new JLabel("v2.1.2 on 2025.8.31"));
+			panel2.add(new JLabel("v2.1.3 on 2025-09-06"));
 			panel3.add(new JLabel("by IlyaYezelovsky"));
 			panel4.add(ok);
 			mPanel.add(panel1);
@@ -147,7 +156,7 @@ public class Main {
 		duty = new JLabel(DutyManager.getTodayDuty());
 		panel.add(duty);
 
-		frame.getContentPane().add(panel);
+		frame.setContentPane(panel);
 		frame.setSize(150, 200);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);

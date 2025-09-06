@@ -2,9 +2,7 @@ package ilya.classutils;
 
 import java.awt.*;
 import java.io.*;
-
 import javax.swing.*;
-
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 
@@ -81,12 +79,12 @@ public class Seat {
 		}
 
 	}
+
 	private final static Extract ext = new Extract();
 	private JFrame frame;
 	private JPanel panel;
 	private JTextArea outputArea;
 	private StringBuffer output;
-
 	public String[] latest;
 
 	public boolean export() {
@@ -107,7 +105,7 @@ public class Seat {
 		StringBuffer sb = new StringBuffer();
 		sb.append(Utils.getTime() + " 座位自动编排\n");
 		for (int i = 0; i < 28; i++) {
-			sb.append("(" + ((i + 2) / 5 + 1) + "," + ((i + 2) % 5 + 1) + ")" + latest[i] + "\n");
+			sb.append("(" + (((i + 2) / 5) + 1) + "," + (((i + 2) % 5) + 1) + ")" + latest[i] + "\n");
 		}
 		sb.append("----\n");
 		return sb.toString();
@@ -178,8 +176,9 @@ public class Seat {
 		rightPanel.add(scroller);
 		panel.add(rightPanel);
 
-		frame.getContentPane().add(panel);
+		frame.setContentPane(panel);
 		frame.setSize(500, 275);
 		frame.setVisible(true);
 	}
+
 }

@@ -1,8 +1,75 @@
 package ilya.classutils;
 
+import java.time.*;
+import java.time.format.*;
 import javax.swing.*;
 
 public class StudentGUI {
+
+	public static class ScoreEditGUI {
+
+		public static ZonedDateTime parseTime(String dateTimeStr) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+					.withZone(ZoneId.of("Asia/Irkutsk"));
+			return ZonedDateTime.parse(dateTimeStr, formatter).withNano(0);
+		}
+
+		private JFrame frame;
+		private JPanel panel;
+		private StudentGUI outer;
+
+		private ScoreEditGUI(StudentGUI outer) {
+			// Only in this type you can create ScoreEditGUI instances.
+			this.outer = outer;
+		}
+
+		private void go(ScoreChange s) {
+			frame = new JFrame("编辑计分项");
+			panel = new JPanel();
+			JLabel scoreLabel = new JLabel("分数");
+			JLabel reasonLabel = new JLabel("原因");
+			JLabel timeLabel = new JLabel("时间");
+			JTextField scoreField = new JTextField(20);
+			JTextField reasonField = new JTextField(20);
+			JTextField timeField = new JTextField(20);
+			JButton okButton = new JButton("确定");
+			okButton.addActionListener(a -> {
+				try {
+					s.setTime(parseTime(timeField.getText()));
+					s.setScore(Integer.parseInt(scoreField.getText()));
+					s.setReason(reasonField.getText());
+					outer.refresh();
+				} catch (Exception e) {
+					Utils.showErrorMsgbox(e);
+				}
+			});
+			JButton cancelButton = new JButton("取消");
+			cancelButton.addActionListener(a -> {
+				frame.dispose();
+			});
+			JPanel scorePanel = new JPanel();
+			scorePanel.add(scoreLabel);
+			scorePanel.add(scoreField);
+			JPanel reasonPanel = new JPanel();
+			reasonPanel.add(reasonLabel);
+			reasonPanel.add(reasonField);
+			JPanel timePanel = new JPanel();
+			timePanel.add(timeLabel);
+			timePanel.add(timeField);
+			JPanel buttonPanel = new JPanel();
+			buttonPanel.add(okButton);
+			buttonPanel.add(cancelButton);
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+			panel.add(scorePanel);
+			panel.add(reasonPanel);
+			panel.add(timePanel);
+			panel.add(buttonPanel);
+			frame.setContentPane(panel);
+			frame.setSize(250, 175);
+			frame.setVisible(true);
+		}
+
+	}
 
 	private JFrame frame;
 	private JPanel panel;
@@ -50,6 +117,7 @@ public class StudentGUI {
 		JTextField reasonField = new JTextField(20);
 		JButton scoreButton = new JButton("计分");
 		JButton deleteButton = new JButton("删除");
+		JButton editButton = new JButton("编辑");
 		scoreButton.addActionListener(a -> {
 			try {
 				if (list.getSelectedValue() != null) {
@@ -66,7 +134,7 @@ public class StudentGUI {
 		});
 		deleteButton.addActionListener(a -> {
 			try {
-				if (list.getSelectedValue() != null && scoreList.getSelectedValue() != null) {
+				if ((list.getSelectedValue() != null) && (scoreList.getSelectedValue() != null)) {
 					list.getSelectedValue().removeRecord(scoreList.getSelectedValue());
 				} else {
 					Utils.showMsgbox("你还没有选中", "错误");
@@ -76,6 +144,11 @@ public class StudentGUI {
 			} finally {
 				Student.saveAll();
 				refresh();
+			}
+		});
+		editButton.addActionListener(a -> {
+			if (scoreList.getSelectedValue() != null) {
+				new ScoreEditGUI(this).go(scoreList.getSelectedValue());
 			}
 		});
 		JLabel saveLabel = new JLabel("数据将会自动保存在默认文件中");
@@ -119,6 +192,7 @@ public class StudentGUI {
 		JPanel panel2 = new JPanel();
 		panel2.add(scoreButton);
 		panel2.add(deleteButton);
+		panel2.add(editButton);
 		JPanel panel3 = new JPanel();
 		panel3.add(saveButton);
 		JPanel panel4 = new JPanel();
@@ -136,7 +210,7 @@ public class StudentGUI {
 		panel.add(rightPanel);
 
 		refresh();
-		frame.getContentPane().add(panel);
+		frame.setContentPane(panel);
 		frame.setSize(600, 480);
 		frame.setVisible(true);
 	}

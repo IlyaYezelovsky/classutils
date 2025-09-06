@@ -3,12 +3,12 @@ package ilya.classutils;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-
 import javax.swing.*;
 
 public class Extract {
 
 	private class InputListener implements ActionListener {
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
@@ -17,7 +17,9 @@ public class Extract {
 				Utils.showMsgbox("不正确的输入", "错误", 80, 100);
 			}
 		}
+
 	}
+
 	public final static int ALL_SEX = 0;
 	public final static int BOY_ONLY = 1;
 	public final static int GIRL_ONLY = 2;
@@ -28,13 +30,9 @@ public class Extract {
 	private JRadioButton girlRadio;
 	private JCheckBox repeatBox;
 	private JTextField inputField;
-
 	private JTextArea outputArea;
-
 	private StringBuffer output;
-
 	private int sex = 0;
-
 	private Random rd;
 
 	private String getMode() {
@@ -42,22 +40,20 @@ public class Extract {
 			return "仅限男生";
 		} else if (girlRadio.isSelected()) {
 			return "仅限女生";
-		} else {
+		} else if (allRadio.isSelected()) {
 			return "不限性别";
+		} else {
+			throw new IllegalStateException("Exception happened when getting random mode");
 		}
 	}
 
 	public Student getRandom(int type) {
-		switch (type) {
-			case 0:
-				return getRandomStudent();
-			case 1:
-				return getRandomBoy();
-			case 2:
-				return getRandomGirl();
-			default:
-				throw new IllegalArgumentException();
-		}
+		return switch (type) {
+			case 0 -> getRandomStudent();
+			case 1 -> getRandomBoy();
+			case 2 -> getRandomGirl();
+			default -> throw new IllegalArgumentException();
+		};
 	}
 
 	public Student[] getRandom(int type, int num) {
@@ -65,16 +61,12 @@ public class Extract {
 	}
 
 	public Student[] getRandom(int type, int num, boolean allowRepeat) {
-		switch (type) {
-			case 0:
-				return getRandomStudent(num, allowRepeat);
-			case 1:
-				return getRandomBoy(num, allowRepeat);
-			case 2:
-				return getRandomGirl(num, allowRepeat);
-			default:
-				throw new IllegalArgumentException();
-		}
+		return switch (type) {
+			case 0 -> getRandomStudent(num, allowRepeat);
+			case 1 -> getRandomBoy(num, allowRepeat);
+			case 2 -> getRandomGirl(num, allowRepeat);
+			default -> throw new IllegalArgumentException();
+		};
 	}
 
 	public Student getRandomBoy() {
@@ -93,8 +85,8 @@ public class Extract {
 	public Student[] getRandomBoy(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
 			ArrayList<Student> list = new ArrayList<>();
-			if (num < 1 || num > 19) {
-				throw new IllegalArgumentException("必须输入[1, 19]的整数，但却发现了「" + num + "」");
+			if ((num < 1) || (num > 19)) {
+				throw new IllegalArgumentException("Integer from 1 to 19 is expected but " + num + " is found");
 			}
 			while (list.size() < num) {
 				Student i = getRandomBoy();
@@ -105,7 +97,7 @@ public class Extract {
 			return list.toArray(new Student[num]);
 		} else {
 			if (num < 1) {
-				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
+				throw new IllegalArgumentException("Positive integer is expected but " + num + " is found");
 			}
 			Student[] result = new Student[num];
 			for (int i = 0; i < num; i++) {
@@ -131,8 +123,8 @@ public class Extract {
 	public Student[] getRandomGirl(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
 			ArrayList<Student> list = new ArrayList<>();
-			if (num < 1 || num > 10) {
-				throw new IllegalArgumentException("必须输入[1, 10]的整数，但却发现了「" + num + "」");
+			if ((num < 1) || (num > 9)) {
+				throw new IllegalArgumentException("Integer from 1 to 9 is expected but " + num + " is found");
 			}
 			while (list.size() < num) {
 				Student i = getRandomGirl();
@@ -143,7 +135,7 @@ public class Extract {
 			return list.toArray(new Student[num]);
 		} else {
 			if (num < 1) {
-				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
+				throw new IllegalArgumentException("Positive integer is expected but " + num + " is found");
 			}
 			Student[] result = new Student[num];
 			for (int i = 0; i < num; i++) {
@@ -157,14 +149,16 @@ public class Extract {
 		refresh();
 		return Student.LIST.toArray(new Student[28])[rd.nextInt(28)];
 	}
+
 	public Student[] getRandomStudent(int num) {
 		return getRandomStudent(num, false);
 	}
+
 	public Student[] getRandomStudent(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
 			ArrayList<Student> list = new ArrayList<>();
-			if (num < 1 || num > 29) {
-				throw new IllegalArgumentException("必须输入[1, 29]的整数，但却发现了「" + num + "」");
+			if ((num < 1) || (num > 29)) {
+				throw new IllegalArgumentException("Integer from 1 to 29 is expected but " + num + " is found");
 			}
 			while (list.size() < num) {
 				Student i = getRandomStudent();
@@ -175,7 +169,7 @@ public class Extract {
 			return list.toArray(new Student[num]);
 		} else {
 			if (num < 1) {
-				throw new IllegalArgumentException("必须输入正整数，但却发现了「" + num + "」");
+				throw new IllegalArgumentException("Positive integer is expected but " + num + " is found");
 			}
 			Student[] result = new Student[num];
 			for (int i = 0; i < num; i++) {
@@ -298,16 +292,16 @@ public class Extract {
 		rightPanel.add(scroller);
 		panel.add(rightPanel);
 
-		frame.getContentPane().add(panel);
+		frame.setContentPane(panel);
 		frame.setSize(850, 275);
 		frame.setVisible(true);
 	}
 
 	private void refresh() {
-		rd = new Random((long) (Long.MAX_VALUE * Math.random()));
+		rd.setSeed((long) (Math.random() * Long.MAX_VALUE));
 	}
 
-	private boolean repeatAllowed() {
+	public boolean repeatAllowed() {
 		return repeatBox.isSelected();
 	}
 
