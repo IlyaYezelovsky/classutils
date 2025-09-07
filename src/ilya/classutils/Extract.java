@@ -1,28 +1,26 @@
 package ilya.classutils;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.FlowLayout;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 public class Extract {
 
-	private class InputListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			try {
-				showResult(getSex(), Integer.parseInt(inputField.getText()), repeatAllowed());
-			} catch (Exception e1) {
-				Utils.showMsgbox("不正确的输入", "错误", 80, 100);
-			}
-		}
-
-	}
-
-	public final static int ALL_SEX = 0;
-	public final static int BOY_ONLY = 1;
-	public final static int GIRL_ONLY = 2;
+	public static final int ALL_SEX = 0;
+	public static final int BOY_ONLY = 1;
+	public static final int GIRL_ONLY = 2;
 	private JFrame frame;
 	private JPanel panel;
 	private JRadioButton allRadio;
@@ -32,10 +30,14 @@ public class Extract {
 	private JTextField inputField;
 	private JTextArea outputArea;
 	private StringBuffer output;
-	private int sex = 0;
-	private Random rd;
+	private int sexMode = 0;
+	private Random randomizer;
 
-	private String getMode() {
+	public boolean allowRepeat() {
+		return repeatBox.isSelected();
+	}
+
+	private String getModeString() {
 		if (boyRadio.isSelected()) {
 			return "仅限男生";
 		} else if (girlRadio.isSelected()) {
@@ -52,7 +54,7 @@ public class Extract {
 			case 0 -> getRandomStudent();
 			case 1 -> getRandomBoy();
 			case 2 -> getRandomGirl();
-			default -> throw new IllegalArgumentException();
+			default -> throw new IllegalStateException("Exception happened when getting sex mode");
 		};
 	}
 
@@ -65,7 +67,7 @@ public class Extract {
 			case 0 -> getRandomStudent(num, allowRepeat);
 			case 1 -> getRandomBoy(num, allowRepeat);
 			case 2 -> getRandomGirl(num, allowRepeat);
-			default -> throw new IllegalArgumentException();
+			default -> throw new IllegalStateException("Exception happened when getting sex mode");
 		};
 	}
 
@@ -84,7 +86,7 @@ public class Extract {
 
 	public Student[] getRandomBoy(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			ArrayList<Student> list = new ArrayList<>();
+			List<Student> list = new ArrayList<>();
 			if ((num < 1) || (num > 19)) {
 				throw new IllegalArgumentException("Integer from 1 to 19 is expected but " + num + " is found");
 			}
@@ -122,7 +124,7 @@ public class Extract {
 
 	public Student[] getRandomGirl(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			ArrayList<Student> list = new ArrayList<>();
+			List<Student> list = new ArrayList<>();
 			if ((num < 1) || (num > 9)) {
 				throw new IllegalArgumentException("Integer from 1 to 9 is expected but " + num + " is found");
 			}
@@ -147,7 +149,7 @@ public class Extract {
 
 	public Student getRandomStudent() {
 		refresh();
-		return Student.LIST.toArray(new Student[28])[rd.nextInt(28)];
+		return Student.getList().toArray(new Student[28])[randomizer.nextInt(28)];
 	}
 
 	public Student[] getRandomStudent(int num) {
@@ -156,9 +158,9 @@ public class Extract {
 
 	public Student[] getRandomStudent(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			ArrayList<Student> list = new ArrayList<>();
-			if ((num < 1) || (num > 29)) {
-				throw new IllegalArgumentException("Integer from 1 to 29 is expected but " + num + " is found");
+			java.util.List<Student> list = new ArrayList<>();
+			if ((num < 1) || (num > 28)) {
+				throw new IllegalArgumentException("Integer from 1 to 28 is expected but " + num + " is found");
 			}
 			while (list.size() < num) {
 				Student i = getRandomStudent();
@@ -179,15 +181,11 @@ public class Extract {
 		}
 	}
 
-	private String getRepeat() {
-		if (repeatAllowed()) {
-			return "允许重复";
-		} else {
-			return "不允许重复";
-		}
+	public String getRepeatAllowedString() {
+		return allowRepeat() ? "允许重复" : "不允许重复";
 	}
 
-	private int getSex() {
+	public int getSexMode() {
 		if (boyRadio.isSelected()) {
 			return 1;
 		} else if (girlRadio.isSelected()) {
@@ -226,19 +224,19 @@ public class Extract {
 		JButton button4 = new JButton("4");
 		JButton button5 = new JButton("5");
 		button1.addActionListener(a -> {
-			showResult(getSex(), 1, repeatAllowed());
+			showResult(getSexMode(), 1, allowRepeat());
 		});
 		button2.addActionListener(a -> {
-			showResult(getSex(), 2, repeatAllowed());
+			showResult(getSexMode(), 2, allowRepeat());
 		});
 		button3.addActionListener(a -> {
-			showResult(getSex(), 3, repeatAllowed());
+			showResult(getSexMode(), 3, allowRepeat());
 		});
 		button4.addActionListener(a -> {
-			showResult(getSex(), 4, repeatAllowed());
+			showResult(getSexMode(), 4, allowRepeat());
 		});
 		button5.addActionListener(a -> {
-			showResult(getSex(), 5, repeatAllowed());
+			showResult(getSexMode(), 5, allowRepeat());
 		});
 		quickPanel.add(button1);
 		quickPanel.add(button2);
@@ -265,7 +263,13 @@ public class Extract {
 		copyButton.addActionListener(a -> {
 			Utils.copy(output.toString());
 		});
-		okButton.addActionListener(new InputListener());
+		okButton.addActionListener(a -> {
+			try {
+				showResult(getSexMode(), Integer.parseInt(inputField.getText()), allowRepeat());
+			} catch (NumberFormatException e) {
+				Utils.showMsgbox("不正确的输入", "错误");
+			}
+		});
 
 		inputPanel.setLayout(new FlowLayout());
 		inputPanel.add(inputField);
@@ -298,18 +302,14 @@ public class Extract {
 	}
 
 	private void refresh() {
-		rd.setSeed((long) (Math.random() * Long.MAX_VALUE));
-	}
-
-	public boolean repeatAllowed() {
-		return repeatBox.isSelected();
+		randomizer.setSeed((long) (Math.random() * Long.MAX_VALUE));
 	}
 
 	private void showResult(int type, int num, boolean allowRepeat) {
 		Student[] result = getRandom(type, num, allowRepeat);
 		StringBuffer sb = new StringBuffer();
 		sb.append(Utils.getTime() + " ");
-		sb.append(getMode() + " " + getRepeat() + num + "个\n");
+		sb.append(getModeString() + " " + getRepeatAllowedString() + num + "个\n");
 		for (int i = 0; i < result.length; i++) {
 			sb.append("[" + (i + 1) + "] " + result[i] + "\n");
 		}

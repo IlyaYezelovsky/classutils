@@ -1,12 +1,23 @@
 package ilya.classutils;
 
-import java.awt.*;
-import java.awt.datatransfer.*;
-import java.io.*;
-import java.time.*;
-import java.time.format.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 
 public class Utils {
 
@@ -47,9 +58,7 @@ public class Utils {
 	}
 
 	public static void showErrorMsgbox(Throwable e) {
-		showErrorMsgbox(new Throwable[] {
-				e
-		});
+		showErrorMsgbox(withSuppressed(e));
 	}
 
 	public static void showErrorMsgbox(Throwable[] e) {

@@ -1,13 +1,26 @@
 package ilya.classutils;
 
-import java.io.*;
-import java.time.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Student implements Serializable, Comparable<Student> {
 
 	private static final long serialVersionUID = 2198637827847803716L;
-	static TreeSet<Student> LIST;
+	private static Set<Student> LIST;
+
+	public static Set<Student> getList() {
+		return LIST;
+	}
 
 	public static void initializeList() {
 		List<Student> temp = List.of(new Student(2, "黄文林", true), new Student(3, "李楚誉", true),
@@ -29,14 +42,8 @@ public class Student implements Serializable, Comparable<Student> {
 
 	public static void loadAll(File file) {
 		try (ObjectInputStream os = new ObjectInputStream(new FileInputStream(file))) {
-			Object obj = os.readObject();
-			if (obj instanceof TreeSet) {
-				TreeSet<?> set = (TreeSet<?>) obj;
-				if (set.getFirst() instanceof Student) {
-					LIST = (TreeSet<Student>) set;
-				}
-			}
-		} catch (ClassNotFoundException | IOException e) {
+			LIST = (Set<Student>) os.readObject();
+		} catch (ClassNotFoundException | IOException | ClassCastException e) {
 			Utils.showErrorMsgbox(Utils.withSuppressed(e));
 		}
 	}
@@ -56,7 +63,7 @@ public class Student implements Serializable, Comparable<Student> {
 	private String name;
 	private boolean sex;// true for male, false for female
 	private int num;
-	private ArrayList<ScoreChange> scoreChangeList;
+	private List<ScoreChange> scoreChangeList;
 
 	public Student(int num, String name, boolean sex) {
 		this.name = name;
@@ -81,7 +88,7 @@ public class Student implements Serializable, Comparable<Student> {
 
 	@Override
 	public boolean equals(Object o) {
-		return ((o instanceof Student) && o.toString().equals(toString()));
+		return ((o.getClass().equals(Student.class)) && o.toString().equals(toString()));
 	}
 
 	public ScoreChange[] getAllRecord() {

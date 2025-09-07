@@ -1,12 +1,23 @@
 package ilya.classutils;
 
-import java.time.*;
-import java.time.format.*;
-import javax.swing.*;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 
 public class StudentGUI {
 
-	public static class ScoreEditGUI {
+	public class ScoreEditGUI {
 
 		public static ZonedDateTime parseTime(String dateTimeStr) {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -16,12 +27,6 @@ public class StudentGUI {
 
 		private JFrame frame;
 		private JPanel panel;
-		private StudentGUI outer;
-
-		private ScoreEditGUI(StudentGUI outer) {
-			// Only in this type you can create ScoreEditGUI instances.
-			this.outer = outer;
-		}
 
 		private void go(ScoreChange s) {
 			frame = new JFrame("编辑计分项");
@@ -39,7 +44,7 @@ public class StudentGUI {
 					s.setTime(parseTime(timeField.getText()));
 					s.setScore(Integer.parseInt(scoreField.getText()));
 					s.setReason(reasonField.getText());
-					outer.refresh();
+					refresh();
 				} catch (Exception e) {
 					Utils.showErrorMsgbox(e);
 				}
@@ -74,12 +79,12 @@ public class StudentGUI {
 
 	private JFrame frame;
 	private JPanel panel;
-	private JList<Student> list;
+	private JList<Student> studentList;
 	private JList<ScoreChange> scoreList;
 	private JLabel scoreLeftLabel;
 
 	public StudentGUI() {
-		list = new JList<>(Student.LIST.toArray(new Student[28]));
+		studentList = new JList<>(Student.getList().toArray(new Student[28]));
 	}
 
 	public void go() {
@@ -87,13 +92,13 @@ public class StudentGUI {
 		frame = new JFrame("计分管理");
 		panel = new JPanel();
 
-		JScrollPane scroller = new JScrollPane(list);
+		JScrollPane scroller = new JScrollPane(studentList);
 		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		list.setVisibleRowCount(10);
-		list.setFixedCellWidth(100);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.addListSelectionListener(l -> {
+		studentList.setVisibleRowCount(10);
+		studentList.setFixedCellWidth(100);
+		studentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		studentList.addListSelectionListener(l -> {
 			refresh();
 		});
 		JPanel leftPanel = new JPanel();
@@ -126,8 +131,9 @@ public class StudentGUI {
 
 		scoreButton.addActionListener(a -> {
 			try {
-				if (list.getSelectedValue() != null) {
-					list.getSelectedValue().changeScore(reasonField.getText(), Integer.parseInt(scoreField.getText()));
+				if (studentList.getSelectedValue() != null) {
+					studentList.getSelectedValue().changeScore(reasonField.getText(),
+							Integer.parseInt(scoreField.getText()));
 				} else {
 					Utils.showMsgbox("你还没有选中", "错误");
 				}
@@ -141,8 +147,8 @@ public class StudentGUI {
 
 		deleteButton.addActionListener(a -> {
 			try {
-				if ((list.getSelectedValue() != null) && (scoreList.getSelectedValue() != null)) {
-					list.getSelectedValue().removeRecord(scoreList.getSelectedValue());
+				if ((studentList.getSelectedValue() != null) && (scoreList.getSelectedValue() != null)) {
+					studentList.getSelectedValue().removeRecord(scoreList.getSelectedValue());
 				} else {
 					Utils.showMsgbox("你还没有选中", "错误");
 				}
@@ -156,7 +162,7 @@ public class StudentGUI {
 
 		editButton.addActionListener(a -> {
 			if (scoreList.getSelectedValue() != null) {
-				new ScoreEditGUI(this).go(scoreList.getSelectedValue());
+				new ScoreEditGUI().go(scoreList.getSelectedValue());
 			} else {
 				Utils.showMsgbox("你还没有选中", "错误");
 			}
@@ -184,10 +190,10 @@ public class StudentGUI {
 			fc.showOpenDialog(frame);
 			if (fc.getSelectedFile() != null) {
 				Student.loadAll(fc.getSelectedFile());
-				list.setSelectedValue(null, true);
+				studentList.setSelectedValue(null, true);
 				scoreLeftLabel.setText("分数：0");
 				scoreList.setListData(new ScoreChange[0]);
-				list.setListData(Student.LIST.toArray(new Student[28]));
+				studentList.setListData(Student.getList().toArray(new Student[28]));
 				refresh();
 				Utils.showMsgbox("加载成功", "提示");
 			}
@@ -238,9 +244,9 @@ public class StudentGUI {
 	}
 
 	public void refresh() {
-		if (list.getSelectedValue() != null) {
-			scoreList.setListData(list.getSelectedValue().getAllRecord());
-			scoreLeftLabel.setText("分数：" + list.getSelectedValue().getScore());
+		if (studentList.getSelectedValue() != null) {
+			scoreList.setListData(studentList.getSelectedValue().getAllRecord());
+			scoreLeftLabel.setText("分数：" + studentList.getSelectedValue().getScore());
 		}
 	}
 

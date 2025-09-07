@@ -1,9 +1,19 @@
 package ilya.classutils;
 
-import java.time.*;
-import java.time.temporal.*;
-import java.util.*;
-import javax.swing.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 public class Main {
 
@@ -72,7 +82,7 @@ public class Main {
 		setWindows();
 		test = false;
 		if ((args.length != 0) || test) {
-			ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
+			List<String> argList = new ArrayList<>(Arrays.asList(args));
 			if (argList.contains("--initialize") || test) {
 				Student.initializeList();
 			} else {

@@ -1,10 +1,21 @@
 package ilya.classutils;
 
-import java.awt.*;
-import java.io.*;
-import javax.swing.*;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.*;
+import java.awt.FlowLayout;
+import java.io.File;
+import java.io.FileOutputStream;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Seat {
 

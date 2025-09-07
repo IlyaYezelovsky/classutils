@@ -1,13 +1,11 @@
 package ilya.classutils;
 
-import java.io.*;
-import java.time.*;
+import java.io.Serializable;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class ScoreChange implements Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 2777262877276329833L;
 	private ZonedDateTime time;
 	private String reason;
