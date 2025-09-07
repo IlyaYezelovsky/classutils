@@ -16,6 +16,16 @@ public class Utils {
 		clipboard.setContents(selection, null);
 	}
 
+	public static String getShortTime() {
+		return getShortTime(ZonedDateTime.now(ZoneId.of("Asia/Irkutsk")));
+	}
+
+	public static String getShortTime(ZonedDateTime time) {
+		StringBuilder sb = new StringBuilder(Utils.getTime(time));
+		sb.delete(10, 16);
+		return sb.toString();
+	}
+
 	public static String getTime() {
 		return getTime(ZonedDateTime.now(ZoneId.of("Asia/Irkutsk")));
 	}

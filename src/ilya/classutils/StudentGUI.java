@@ -29,9 +29,10 @@ public class StudentGUI {
 			JLabel scoreLabel = new JLabel("分数");
 			JLabel reasonLabel = new JLabel("原因");
 			JLabel timeLabel = new JLabel("时间");
-			JTextField scoreField = new JTextField(20);
-			JTextField reasonField = new JTextField(20);
-			JTextField timeField = new JTextField(20);
+			JTextField scoreField = new JTextField(25);
+			JTextField reasonField = new JTextField(25);
+			JTextField timeField = new JTextField(25);
+			timeField.setText(Utils.getShortTime(s.getTime()));
 			JButton okButton = new JButton("确定");
 			okButton.addActionListener(a -> {
 				try {
@@ -75,7 +76,7 @@ public class StudentGUI {
 	private JPanel panel;
 	private JList<Student> list;
 	private JList<ScoreChange> scoreList;
-	private JLabel leftLabel;
+	private JLabel scoreLeftLabel;
 
 	public StudentGUI() {
 		list = new JList<>(Student.LIST.toArray(new Student[28]));
@@ -90,6 +91,7 @@ public class StudentGUI {
 		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		list.setVisibleRowCount(10);
+		list.setFixedCellWidth(100);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(l -> {
 			refresh();
@@ -97,15 +99,15 @@ public class StudentGUI {
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 		leftPanel.add(scroller);
-		leftLabel = new JLabel("当前分数：0");
-		leftPanel.add(leftLabel);
+		scoreLeftLabel = new JLabel("分数：0");
+		leftPanel.add(scoreLeftLabel);
 		panel.add(leftPanel);
 
 		scoreList = new JList<>();
 		scoreList.setFixedCellWidth(350);
 		JScrollPane scrollPane = new JScrollPane(scoreList);
-		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scoreList.setVisibleRowCount(10);
 		scoreList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel.add(scrollPane);
@@ -113,11 +115,15 @@ public class StudentGUI {
 		JPanel rightPanel = new JPanel();
 		JLabel scoreLabel = new JLabel("分数");
 		JLabel reasonLabel = new JLabel("原因");
-		JTextField scoreField = new JTextField(20);
-		JTextField reasonField = new JTextField(20);
+		JLabel timeLabel = new JLabel("时间");
+		JTextField scoreField = new JTextField(25);
+		JTextField reasonField = new JTextField(25);
+		JTextField timeField = new JTextField(25);
 		JButton scoreButton = new JButton("计分");
 		JButton deleteButton = new JButton("删除");
 		JButton editButton = new JButton("编辑");
+		JButton nowButton = new JButton("现在时间");
+
 		scoreButton.addActionListener(a -> {
 			try {
 				if (list.getSelectedValue() != null) {
@@ -132,6 +138,7 @@ public class StudentGUI {
 				refresh();
 			}
 		});
+
 		deleteButton.addActionListener(a -> {
 			try {
 				if ((list.getSelectedValue() != null) && (scoreList.getSelectedValue() != null)) {
@@ -146,11 +153,19 @@ public class StudentGUI {
 				refresh();
 			}
 		});
+
 		editButton.addActionListener(a -> {
 			if (scoreList.getSelectedValue() != null) {
 				new ScoreEditGUI(this).go(scoreList.getSelectedValue());
+			} else {
+				Utils.showMsgbox("你还没有选中", "错误");
 			}
 		});
+
+		nowButton.addActionListener(a -> {
+			timeField.setText(Utils.getShortTime());
+		});
+
 		JLabel saveLabel = new JLabel("数据将会自动保存在默认文件中");
 		JButton saveButton = new JButton("另存为");
 		saveButton.addActionListener(a -> {
@@ -162,6 +177,7 @@ public class StudentGUI {
 				Utils.showMsgbox("保存成功", "提示");
 			}
 		});
+
 		JButton loadButton = new JButton("加载");
 		loadButton.addActionListener(a -> {
 			JFileChooser fc = new JFileChooser();
@@ -169,13 +185,14 @@ public class StudentGUI {
 			if (fc.getSelectedFile() != null) {
 				Student.loadAll(fc.getSelectedFile());
 				list.setSelectedValue(null, true);
-				leftLabel.setText("当前分数：0");
+				scoreLeftLabel.setText("分数：0");
 				scoreList.setListData(new ScoreChange[0]);
 				list.setListData(Student.LIST.toArray(new Student[28]));
 				refresh();
 				Utils.showMsgbox("加载成功", "提示");
 			}
 		});
+
 		JButton exitButton = new JButton("返回");
 		exitButton.addActionListener(a -> {
 			Student.saveAll();
@@ -187,12 +204,16 @@ public class StudentGUI {
 		JPanel panelB = new JPanel();
 		panelB.add(reasonLabel);
 		panelB.add(reasonField);
+		JPanel panelC = new JPanel();
+		panelC.add(timeLabel);
+		panelC.add(timeField);
 		JPanel panel1 = new JPanel();
 		panel1.add(saveLabel);
 		JPanel panel2 = new JPanel();
 		panel2.add(scoreButton);
 		panel2.add(deleteButton);
 		panel2.add(editButton);
+		panel2.add(nowButton);
 		JPanel panel3 = new JPanel();
 		panel3.add(saveButton);
 		JPanel panel4 = new JPanel();
@@ -202,6 +223,7 @@ public class StudentGUI {
 		panel5.add(exitButton);
 		rightPanel.add(panelA);
 		rightPanel.add(panelB);
+		rightPanel.add(panelC);
 		rightPanel.add(panel1);
 		rightPanel.add(panel2);
 		rightPanel.add(panel3);
@@ -211,14 +233,14 @@ public class StudentGUI {
 
 		refresh();
 		frame.setContentPane(panel);
-		frame.setSize(600, 480);
+		frame.setSize(850, 300);
 		frame.setVisible(true);
 	}
 
 	public void refresh() {
 		if (list.getSelectedValue() != null) {
 			scoreList.setListData(list.getSelectedValue().getAllRecord());
-			leftLabel.setText("当前分数：" + list.getSelectedValue().getScore());
+			scoreLeftLabel.setText("分数：" + list.getSelectedValue().getScore());
 		}
 	}
 

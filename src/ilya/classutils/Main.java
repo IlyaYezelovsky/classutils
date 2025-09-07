@@ -9,18 +9,15 @@ public class Main {
 
 	public class DutyManager {
 
-		private static final LocalDate FIRST_DAY = LocalDate.of(2025, 8, 24);
+		private static final LocalDate FIRST_DAY = LocalDate.of(2025, 8, 20);
 		private static final String[][] DUTY_PATTERN = {
 				{
 						"A", "C"
-				},
-				{
+				}, {
 						"B", "D"
-				},
-				{
+				}, {
 						"C", "A"
-				},
-				{
+				}, {
 						"D", "B"
 				}
 		};
@@ -42,6 +39,8 @@ public class Main {
 		public static String getTodayDuty() {
 
 			ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Irkutsk"));
+			// ZonedDateTime now = ZonedDateTime.of(2025, 9, 5, 11, 45, 14, 0,
+			// ZoneId.of("Asia/Irkutsk"));
 			LocalDate today = now.toLocalDate();
 
 			long workingDays = calculateWorkingDays(FIRST_DAY, today);
@@ -62,7 +61,7 @@ public class Main {
 
 	private static void launch() {
 		try {
-			// throw new Exception("Test exception");
+			// throw new RuntimeException("Test exception");
 			new Main().go();
 		} catch (Exception e) {
 			Utils.showErrorMsgbox(e);
@@ -98,27 +97,29 @@ public class Main {
 	private JLabel duty;
 
 	public void go() {
-		frame = new JFrame("Class 15 Utilities v2.1.3");
+		frame = new JFrame("Class 15 Utilities v2.1.4");
 		panel = new JPanel();
 
 		JButton studentButton = new JButton("计分管理");
 		studentButton.addActionListener(a -> {
 			new StudentGUI().go();
 		});
+		JPanel studentPanel = new JPanel();
+		studentPanel.add(studentButton);
 
 		JButton extractButton = new JButton("随机抽取");
 		extractButton.addActionListener(a -> {
 			new Extract().go();
 		});
+		JPanel extractPanel = new JPanel();
+		extractPanel.add(extractButton);
 
 		JButton seatButton = new JButton("一键排座位");
 		seatButton.addActionListener(a -> {
 			new Seat().go();
 		});
-
-		panel.add(studentButton);
-		panel.add(extractButton);
-		panel.add(seatButton);
+		JPanel seatPanel = new JPanel();
+		seatPanel.add(seatButton);
 
 		JButton aboutButton = new JButton("关于");
 		aboutButton.addActionListener(a -> {
@@ -134,7 +135,7 @@ public class Main {
 			JPanel panel3 = new JPanel();
 			JPanel panel4 = new JPanel();
 			panel1.add(new JLabel("Class 15 Utilities"));
-			panel2.add(new JLabel("v2.1.3 on 2025-09-06"));
+			panel2.add(new JLabel("v2.1.4 on 2025-09-07"));
 			panel3.add(new JLabel("by IlyaYezelovsky"));
 			panel4.add(ok);
 			mPanel.add(panel1);
@@ -142,22 +143,33 @@ public class Main {
 			mPanel.add(panel3);
 			mPanel.add(panel4);
 			msgbox.getContentPane().add(mPanel);
-			msgbox.setSize(150, 150);
+			msgbox.setSize(210, 150);
 			msgbox.setVisible(true);
 		});
-		panel.add(aboutButton);
+		JPanel aboutPanel = new JPanel();
+		aboutPanel.add(aboutButton);
 
 		JButton exitButton = new JButton("退出程序");
 		exitButton.addActionListener(a -> {
 			System.exit(0);
 		});
-		panel.add(exitButton);
+		JPanel exitPanel = new JPanel();
+		exitPanel.add(exitButton);
 
 		duty = new JLabel(DutyManager.getTodayDuty());
-		panel.add(duty);
+		JPanel dutyPanel = new JPanel();
+		dutyPanel.add(duty);
+
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(studentPanel);
+		panel.add(extractPanel);
+		panel.add(seatPanel);
+		panel.add(aboutPanel);
+		panel.add(exitPanel);
+		panel.add(dutyPanel);
 
 		frame.setContentPane(panel);
-		frame.setSize(150, 200);
+		frame.setSize(320, 225);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
