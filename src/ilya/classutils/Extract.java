@@ -31,7 +31,7 @@ public class Extract {
 	private JTextArea outputArea;
 	private StringBuffer output;
 	private int sexMode = 0;
-	private Random randomizer;
+	private Random randomizer = new Random();
 
 	public boolean allowRepeat() {
 		return repeatBox.isSelected();

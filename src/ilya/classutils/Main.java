@@ -107,7 +107,7 @@ public class Main {
 	private JLabel duty;
 
 	public void go() {
-		frame = new JFrame("Class 15 Utilities v2.1.5");
+		frame = new JFrame("Class 15 Utilities v2.1.6");
 		panel = new JPanel();
 
 		JButton studentButton = new JButton("计分管理");
@@ -145,7 +145,7 @@ public class Main {
 			JPanel panel3 = new JPanel();
 			JPanel panel4 = new JPanel();
 			panel1.add(new JLabel("Class 15 Utilities"));
-			panel2.add(new JLabel("v2.1.5 on 2025-09-07"));
+			panel2.add(new JLabel("v2.1.6 on 2025-09-14"));
 			panel3.add(new JLabel("by IlyaYezelovsky"));
 			panel4.add(ok);
 			mPanel.add(panel1);
