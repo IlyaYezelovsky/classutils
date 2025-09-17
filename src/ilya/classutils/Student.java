@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -19,7 +20,7 @@ public class Student implements Serializable, Comparable<Student> {
 	private static Set<Student> LIST;
 
 	public static Set<Student> getList() {
-		return LIST;
+		return Collections.unmodifiableList(LIST);
 	}
 
 	public static void initializeList() {
