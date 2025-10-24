@@ -3,6 +3,7 @@ package ilya.classutils;
 import java.awt.FlowLayout;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -28,8 +29,8 @@ public class Seat {
 				cell.setCellValue(((Number) value).doubleValue());
 			} else if (value instanceof Boolean) {
 				cell.setCellValue((Boolean) value);
-			} else if (value instanceof java.util.Date) {
-				cell.setCellValue((java.util.Date) value);
+			} else if (value instanceof Date) {
+				cell.setCellValue((Date) value);
 			} else {
 				cell.setCellValue(value.toString());
 			}
@@ -57,7 +58,7 @@ public class Seat {
 			}
 			String[] list = latest;
 			int i = 0;
-			for (int j = 4; j > 1; j--, i++) {
+			for (int j = 5; j > 1; j--, i++) {
 				setCellValue(sheet, j, 1, list[i]);
 			}
 			for (int j = 2; j < 7; j++) {
@@ -104,9 +105,9 @@ public class Seat {
 	}
 
 	public void generateList() {
-		Student[] temp = ext.getRandom(0, 28, false);
-		latest = new String[28];
-		for (int i = 0; i < 28; i++) {
+		Student[] temp = ext.getRandom(0, 29, false);
+		latest = new String[29];
+		for (int i = 0; i < 29; i++) {
 			latest[i] = temp[i].toString();
 		}
 	}
@@ -115,8 +116,8 @@ public class Seat {
 		generateList();
 		StringBuffer sb = new StringBuffer();
 		sb.append(Utils.getTime() + " 座位自动编排\n");
-		for (int i = 0; i < 28; i++) {
-			sb.append("(" + (((i + 2) / 5) + 1) + "," + (((i + 2) % 5) + 1) + ")" + latest[i] + "\n");
+		for (int i = 0; i < 29; i++) {
+			sb.append("(" + (((i + 1) / 5) + 1) + "," + (((i + 1) % 5) + 1) + ")" + latest[i] + "\n");
 		}
 		sb.append("----\n");
 		return sb.toString();

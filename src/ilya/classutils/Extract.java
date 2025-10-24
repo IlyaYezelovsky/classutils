@@ -1,9 +1,9 @@
 package ilya.classutils;
 
 import java.awt.FlowLayout;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Random;
+import java.util.Set;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -86,17 +86,14 @@ public class Extract {
 
 	public Student[] getRandomBoy(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			List<Student> list = new ArrayList<>();
-			if ((num < 1) || (num > 19)) {
-				throw new IllegalArgumentException("Integer from 1 to 19 is expected but " + num + " is found");
+			Set<Student> set = new LinkedHashSet<>();
+			if ((num < 1) || (num > 20)) {
+				throw new IllegalArgumentException("Integer from 1 to 20 is expected but " + num + " is found");
 			}
-			while (list.size() < num) {
-				Student i = getRandomBoy();
-				if (!list.contains(i)) {
-					list.add(i);
-				}
+			while (set.size() < num) {
+				set.add(getRandomBoy());
 			}
-			return list.toArray(new Student[num]);
+			return set.toArray(new Student[num]);
 		} else {
 			if (num < 1) {
 				throw new IllegalArgumentException("Positive integer is expected but " + num + " is found");
@@ -124,17 +121,14 @@ public class Extract {
 
 	public Student[] getRandomGirl(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			List<Student> list = new ArrayList<>();
+			Set<Student> set = new LinkedHashSet<>();
 			if ((num < 1) || (num > 9)) {
 				throw new IllegalArgumentException("Integer from 1 to 9 is expected but " + num + " is found");
 			}
-			while (list.size() < num) {
-				Student i = getRandomGirl();
-				if (!list.contains(i)) {
-					list.add(i);
-				}
+			while (set.size() < num) {
+				set.add(getRandomGirl());
 			}
-			return list.toArray(new Student[num]);
+			return set.toArray(new Student[num]);
 		} else {
 			if (num < 1) {
 				throw new IllegalArgumentException("Positive integer is expected but " + num + " is found");
@@ -149,7 +143,7 @@ public class Extract {
 
 	public Student getRandomStudent() {
 		refresh();
-		return Student.getList().toArray(new Student[28])[randomizer.nextInt(28)];
+		return Student.getList().toArray(new Student[29])[randomizer.nextInt(29)];
 	}
 
 	public Student[] getRandomStudent(int num) {
@@ -158,17 +152,14 @@ public class Extract {
 
 	public Student[] getRandomStudent(int num, boolean allowRepeat) {
 		if (!allowRepeat) {
-			java.util.List<Student> list = new ArrayList<>();
-			if ((num < 1) || (num > 28)) {
-				throw new IllegalArgumentException("Integer from 1 to 28 is expected but " + num + " is found");
+			Set<Student> set = new LinkedHashSet<>();
+			if ((num < 1) || (num > 29)) {
+				throw new IllegalArgumentException("Integer from 1 to 29 is expected but " + num + " is found");
 			}
-			while (list.size() < num) {
-				Student i = getRandomStudent();
-				if (!list.contains(i)) {
-					list.add(i);
-				}
+			while (set.size() < num) {
+				set.add(getRandomStudent());
 			}
-			return list.toArray(new Student[num]);
+			return set.toArray(new Student[num]);
 		} else {
 			if (num < 1) {
 				throw new IllegalArgumentException("Positive integer is expected but " + num + " is found");
@@ -266,7 +257,7 @@ public class Extract {
 		okButton.addActionListener(a -> {
 			try {
 				showResult(getSexMode(), Integer.parseInt(inputField.getText()), allowRepeat());
-			} catch (NumberFormatException e) {
+			} catch (IllegalArgumentException e) {
 				Utils.showMsgbox("不正确的输入", "错误");
 			}
 		});

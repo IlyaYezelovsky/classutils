@@ -1,5 +1,9 @@
 package ilya.classutils;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -19,6 +23,16 @@ public class Main {
 
 	public class DutyManager {
 
+		static {
+			try (FileReader r = new FileReader(new File("Settings.ini"))) {
+				offset = r.read();
+			} catch (Exception e) {
+				offset = 0;
+				setOffset(0);
+				Utils.showErrorMsgbox(Utils.withSuppressed(e));
+			}
+		}
+		private static int offset;
 		private static final LocalDate FIRST_DAY = LocalDate.of(2025, 8, 20);
 		private static final String[][] DUTY_PATTERN = {
 				{
@@ -34,7 +48,7 @@ public class Main {
 
 		private static long calculateWorkingDays(LocalDate startDate, LocalDate endDate) {
 			long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
-			long workingDays = 0;
+			long workingDays = offset;
 
 			for (long i = 0; i <= totalDays; i++) {
 				LocalDate currentDate = startDate.plusDays(i);
@@ -44,6 +58,10 @@ public class Main {
 			}
 
 			return workingDays;
+		}
+
+		public static int getOffset() {
+			return offset;
 		}
 
 		public static String getTodayDuty() {
@@ -63,6 +81,15 @@ public class Main {
 
 		private static boolean isWeekend(LocalDate date) {
 			return date.getDayOfWeek().getValue() >= 6;
+		}
+
+		public static void setOffset(int offset) {
+			DutyManager.offset = offset;
+			try (PrintWriter w = new PrintWriter(new File("Settings.ini"))) {
+				w.write(offset);
+			} catch (IOException e) {
+				Utils.showErrorMsgbox(Utils.withSuppressed(e));
+			}
 		}
 
 	}
@@ -107,7 +134,7 @@ public class Main {
 	private JLabel duty;
 
 	public void go() {
-		frame = new JFrame("Class 15 Utilities v2.1.6");
+		frame = new JFrame("Class 15 Utilities v2.1.7");
 		panel = new JPanel();
 
 		JButton studentButton = new JButton("计分管理");
@@ -145,7 +172,7 @@ public class Main {
 			JPanel panel3 = new JPanel();
 			JPanel panel4 = new JPanel();
 			panel1.add(new JLabel("Class 15 Utilities"));
-			panel2.add(new JLabel("v2.1.6 on 2025-09-14"));
+			panel2.add(new JLabel("v2.1.7 on 2025-10-24"));
 			panel3.add(new JLabel("by IlyaYezelovsky"));
 			panel4.add(ok);
 			mPanel.add(panel1);
@@ -169,7 +196,18 @@ public class Main {
 		duty = new JLabel(DutyManager.getTodayDuty());
 		JPanel dutyPanel = new JPanel();
 		dutyPanel.add(duty);
-
+		JButton addButton = new JButton("+");
+		addButton.addActionListener(a -> {
+			DutyManager.setOffset(DutyManager.offset + 1);
+			duty.setText(DutyManager.getTodayDuty());
+		});
+		JButton subtractButton = new JButton("-");
+		subtractButton.addActionListener(a -> {
+			DutyManager.setOffset(DutyManager.offset - 1);
+			duty.setText(DutyManager.getTodayDuty());
+		});
+		dutyPanel.add(addButton);
+		dutyPanel.add(subtractButton);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(studentPanel);
 		panel.add(extractPanel);
@@ -179,7 +217,7 @@ public class Main {
 		panel.add(dutyPanel);
 
 		frame.setContentPane(panel);
-		frame.setSize(320, 225);
+		frame.setSize(320, 250);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
