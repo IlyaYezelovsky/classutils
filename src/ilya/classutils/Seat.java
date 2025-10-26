@@ -80,7 +80,7 @@ public class Seat {
 		}
 
 		private boolean showSaveGUI(Workbook excel) {
-			JFileChooser chooser = new JFileChooser();
+			JFileChooser chooser = new JFileChooser(Utils.currentFolder);
 			chooser.showSaveDialog(frame);
 			if (chooser.getSelectedFile() != null) {
 				save(excel, chooser.getSelectedFile());

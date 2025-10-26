@@ -3,6 +3,7 @@ package ilya.classutils;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.ZoneId;
@@ -20,6 +21,8 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
 public class Utils {
+	
+	public static final File currentFolder = new File(".");
 
 	public static void copy(String text) {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
